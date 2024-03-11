@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Sql interview questions on DataLemur | My New Hugo Site</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Question
+Histogram of tweets - link
+Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&#39;year&#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question
+Rolling average tweets - link
+Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2.">
+    <meta name="generator" content="Hugo 0.123.8">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/sql-interview/">
+    
+
+    <meta property="og:title" content="Sql interview questions on DataLemur" />
+<meta property="og:description" content="Question
+Histogram of tweets - link
+Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&#39;year&#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question
+Rolling average tweets - link
+Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/posts/sql-interview/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T11:32:50-07:00" />
+<meta property="article:modified_time" content="2024-03-11T11:32:50-07:00" />
+
+<meta itemprop="name" content="Sql interview questions on DataLemur">
+<meta itemprop="description" content="Question
+Histogram of tweets - link
+Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&#39;year&#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question
+Rolling average tweets - link
+Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2."><meta itemprop="datePublished" content="2024-03-11T11:32:50-07:00" />
+<meta itemprop="dateModified" content="2024-03-11T11:32:50-07:00" />
+<meta itemprop="wordCount" content="1145">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Sql interview questions on DataLemur"/>
+<meta name="twitter:description" content="Question
+Histogram of tweets - link
+Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&#39;year&#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question
+Rolling average tweets - link
+Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        My New Hugo Site
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Sql interview questions on DataLemur</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-03-11T11:32:50-07:00">March 11, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><strong>Question</strong></p>
+<blockquote>
+<p>Histogram of tweets - <a href="https://datalemur.com/questions/sql-histogram-tweets">link</a></p>
+</blockquote>
+<pre tabindex="0"><code>Example Output:
+tweet_bucket	users_num
+1	2
+2	1
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> tweets_per_user <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> num_tweets, user_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> tweets
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;year&#39;</span>, tweet_date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2022</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> user_id
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> num_tweets <span style="color:#66d9ef">as</span> tweet_bucket, 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> user_num
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> tweets_per_user 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> tweet_bucket
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Rolling average tweets - <a href="https://datalemur.com/questions/rolling-average-tweets">link</a></p>
+</blockquote>
+<pre tabindex="0"><code>Example Output:
+user_id	tweet_date	rolling_avg_3d
+111	06/01/2022 00:00:00	2.00
+111	06/02/2022 00:00:00	1.50
+111	06/03/2022 00:00:00	2.00
+111	06/04/2022 00:00:00	2.67
+111	06/05/2022 00:00:00	4.00
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">distinct</span> user_id, tweet_date,
+</span></span><span style="display:flex;"><span>  round(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">avg</span>(tweet_count) over (
+</span></span><span style="display:flex;"><span>    partition <span style="color:#66d9ef">by</span> user_id 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> tweet_date 
+</span></span><span style="display:flex;"><span>    range <span style="color:#66d9ef">between</span> 
+</span></span><span style="display:flex;"><span>      interval <span style="color:#e6db74">&#39;2 days&#39;</span> preceding 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">and</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">current</span> <span style="color:#66d9ef">row</span> 
+</span></span><span style="display:flex;"><span>  ),<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">as</span> rolling_avg_3d
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">FROM</span> tweets
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> user_id, tweet_date
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Twitter user session activity - <a href="https://datalemur.com/questions/user-session-activity">link</a></p>
+</blockquote>
+<pre tabindex="0"><code>Example Output:
+user_id	session_type	ranking
+333	reply	1
+222	reply	2
+111	retweet	1
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> TotalDuration <span style="color:#66d9ef">AS</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> user_id, session_type,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(duration) over (partition <span style="color:#66d9ef">by</span> user_id, 
+</span></span><span style="display:flex;"><span>    session_type 
+</span></span><span style="display:flex;"><span>    ) total_duration
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> sessions
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> start_date <span style="color:#66d9ef">BETWEEN</span> <span style="color:#e6db74">&#39;2022-01-01&#39;</span>::<span style="color:#66d9ef">timestamp</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">and</span> <span style="color:#e6db74">&#39;2022-02-01&#39;</span>::<span style="color:#66d9ef">timestamp</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>Ranked <span style="color:#66d9ef">as</span> 
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>    user_id,
+</span></span><span style="display:flex;"><span>    session_type,
+</span></span><span style="display:flex;"><span>    rank() over (partition <span style="color:#66d9ef">by</span> session_type 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> total_duration <span style="color:#66d9ef">desc</span>)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">as</span> ranking
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> TotalDuration
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> Ranked
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Data science skills - <a href="https://datalemur.com/questions/matching-skills">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> potential_candidates <span style="color:#66d9ef">AS</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> candidate_id, 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) over (partition <span style="color:#66d9ef">by</span> candidate_id) <span style="color:#66d9ef">as</span> required_skills_count
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> candidates
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> skill <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;Python&#39;</span>, <span style="color:#e6db74">&#39;Tableau&#39;</span>, <span style="color:#e6db74">&#39;PostgreSQL&#39;</span>))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> candidate_id
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">from</span> potential_candidates
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">where</span> required_skills_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> candidate_id
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Page with no likes - <a href="https://datalemur.com/questions/sql-page-with-no-likes">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> p.page_id <span style="color:#66d9ef">FROM</span> pages p
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">LEFT</span> <span style="color:#66d9ef">JOIN</span> page_likes pl <span style="color:#66d9ef">on</span> p.page_id <span style="color:#f92672">=</span> pl.page_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> pl.page_id <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> p.page_id
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Telsa unfinished parts - <a href="https://datalemur.com/questions/tesla-unfinished-parts">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> part, assembly_step 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> parts_assembly
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> finish_date <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Laptop vs mobile viewership - <a href="https://datalemur.com/questions/laptop-mobile-viewership">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> device_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;laptop&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) <span style="color:#66d9ef">as</span> laptop_views,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> device_type <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;phone&#39;</span>, <span style="color:#e6db74">&#39;tablet&#39;</span>) <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>    mobile_views
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> viewership;
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Average post hiatus - <a href="https://datalemur.com/questions/sql-average-post-hiatus-1">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- count of posts &gt; 2 in 2021
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- for every users, get the first and last date
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- then datediff(last and first)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">with</span> Gt2PostsIn2021
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>), user_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> posts
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;year&#39;</span>, post_date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2021</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> user_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">max</span>(post_date::date) over (partition <span style="color:#66d9ef">by</span> user_id)
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">min</span>(post_date::date) over (partition <span style="color:#66d9ef">by</span> user_id) 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> posts
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> user_id <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> user_id <span style="color:#66d9ef">from</span> Gt2PostsIn2021)
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Teams power users - <a href="https://datalemur.com/questions/teams-power-users">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> sender_id, <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> message_count
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> messages
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> 
+</span></span><span style="display:flex;"><span>    date_part(<span style="color:#e6db74">&#39;year&#39;</span>, sent_date::date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2022</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">and</span> date_part(<span style="color:#e6db74">&#39;month&#39;</span>, sent_date::date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">08</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> sender_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> message_count <span style="color:#66d9ef">DESC</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Duplicate job listing - <a href="https://datalemur.com/questions/duplicate-job-listings">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> duplicate_companies 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> company_id, 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) over (partition <span style="color:#66d9ef">by</span> company_id, title, description)
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">as</span> duplicate_posts
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> job_listings
+</span></span><span style="display:flex;"><span>  ) a 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> a.duplicate_posts <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Cities with completed trades - <a href="https://datalemur.com/questions/completed-trades">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> city,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) over (partition <span style="color:#66d9ef">by</span> city) <span style="color:#66d9ef">as</span> total_orders
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>    trades t <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> users u <span style="color:#66d9ef">on</span> t.user_id <span style="color:#f92672">=</span> u.user_id 
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">and</span> t.status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Completed&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> total_orders <span style="color:#66d9ef">desc</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Average review ratings - <a href="https://datalemur.com/questions/sql-avg-review-ratings">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> 
+</span></span><span style="display:flex;"><span>    date_part(<span style="color:#e6db74">&#39;month&#39;</span>, submit_date) <span style="color:#66d9ef">as</span> mth,
+</span></span><span style="display:flex;"><span>    product_id <span style="color:#66d9ef">as</span> product,
+</span></span><span style="display:flex;"><span>    round(<span style="color:#66d9ef">avg</span>(stars) over (partition <span style="color:#66d9ef">by</span> date_part(<span style="color:#e6db74">&#39;month&#39;</span>, submit_date), product_id) 
+</span></span><span style="display:flex;"><span>      ,<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> avg_stars
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">FROM</span> reviews
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> mth, product
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Final account balance - <a href="https://datalemur.com/questions/final-account-balance">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> account_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> transaction_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Deposit&#39;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span> amount <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> transaction_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Withdrawal&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span> amount <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) <span style="color:#66d9ef">as</span> final_balance
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> transactions
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> account_id
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Quickbooks vs Turbotax - <a href="https://datalemur.com/questions/quickbooks-vs-turbotax">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> product <span style="color:#66d9ef">ilike</span> <span style="color:#e6db74">&#39;turbotax%&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> turbotax_total,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> product <span style="color:#66d9ef">ilike</span> <span style="color:#e6db74">&#39;quickbooks%&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> quickbooks_total
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> filed_taxes
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Click through rate - <a href="https://datalemur.com/questions/click-through-rate">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">distinct</span> app_id,
+</span></span><span style="display:flex;"><span>  round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">cast</span>(<span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> event_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;click&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)
+</span></span><span style="display:flex;"><span>      over (partition <span style="color:#66d9ef">by</span> app_id) <span style="color:#66d9ef">as</span> decimal)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">cast</span>(<span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> event_type <span style="color:#f92672">=</span><span style="color:#e6db74">&#39;impression&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)
+</span></span><span style="display:flex;"><span>      over (partition <span style="color:#66d9ef">by</span> app_id) <span style="color:#66d9ef">as</span> decimal)
+</span></span><span style="display:flex;"><span>  ),<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> ctr
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> events
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;year&#39;</span>, <span style="color:#66d9ef">timestamp</span>::date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2022</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Second day confirmation - <a href="https://datalemur.com/questions/second-day-confirmation">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> user_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> texts t <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> emails e <span style="color:#66d9ef">on</span> t.email_id <span style="color:#f92672">=</span> e.email_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> t.signup_action <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Confirmed&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">and</span> t.action_date::date <span style="color:#f92672">-</span> e.signup_date::date <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Cards issued difference - <a href="https://datalemur.com/questions/cards-issued-difference">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> card_name,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">max</span>(issued_amount) over (partition <span style="color:#66d9ef">by</span> card_name)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span> <span style="color:#66d9ef">min</span>(issued_amount ) over (partition <span style="color:#66d9ef">by</span> card_name)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">as</span> difference
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> monthly_cards_issued
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> difference <span style="color:#66d9ef">desc</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Alibaba compressed mean - <a href="https://datalemur.com/questions/alibaba-compressed-mean">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  round(<span style="color:#66d9ef">SUM</span>(item_count <span style="color:#f92672">*</span> order_occurrences)::decimal
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span> <span style="color:#66d9ef">sum</span>(order_occurrences)::decimal, <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">as</span> mean
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> items_per_order
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<ul>
+<li><a href="">link</a></li>
+</ul>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Pharmacy analytics 1 - <a href="https://datalemur.com/questions/top-profitable-drugs">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> drug, total_profit
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span>
+</span></span><span style="display:flex;"><span>  (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>      product_id, 
+</span></span><span style="display:flex;"><span>      drug,
+</span></span><span style="display:flex;"><span>      (total_sales <span style="color:#f92672">-</span> cogs) <span style="color:#66d9ef">as</span> total_profit,
+</span></span><span style="display:flex;"><span>      rank() over (<span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> (total_sales <span style="color:#f92672">-</span> cogs) <span style="color:#66d9ef">desc</span>) <span style="color:#66d9ef">as</span> rnk
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">from</span> pharmacy_sales
+</span></span><span style="display:flex;"><span>    ) <span style="color:#66d9ef">alias</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">where</span> rnk <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">3</span> 
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Most expensive purchase - <a href="https://datalemur.com/questions/most-expensive-purchase">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">DISTINCT</span> customer_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">max</span>(purchase_amount) over (partition <span style="color:#66d9ef">by</span> customer_id 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> purchase_amount <span style="color:#66d9ef">desc</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> purchase_amount
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> transactions
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> purchase_amount <span style="color:#66d9ef">desc</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>ApplePay volume - <a href="https://datalemur.com/questions/apple-pay-volume">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> merchant_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> payment_method <span style="color:#66d9ef">ilike</span> <span style="color:#e6db74">&#39;%apple pay%&#39;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span> transaction_amount <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) <span style="color:#66d9ef">as</span> total_transaction
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> transactions
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> merchant_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> total_transaction <span style="color:#66d9ef">desc</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Accenture SMEs - <a href="https://datalemur.com/questions/subject-matter-experts">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> experience <span style="color:#66d9ef">as</span> 
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> employee_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) over (partition <span style="color:#66d9ef">by</span> employee_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> domains,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(years_of_experience)
+</span></span><span style="display:flex;"><span>    over (partition <span style="color:#66d9ef">by</span> employee_id) <span style="color:#66d9ef">as</span> total_experience
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> employee_expertise)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- select * from experience
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> employee_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> experience
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> 
+</span></span><span style="display:flex;"><span>  (domains <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">and</span> total_experience <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">or</span>
+</span></span><span style="display:flex;"><span>  (domains <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">and</span> total_experience <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> employee_id
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Linked power creators - <a href="https://datalemur.com/questions/linkedin-power-creators">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> 
+</span></span><span style="display:flex;"><span>  profile_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> personal_profiles p 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> company_pages <span style="color:#66d9ef">c</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">on</span> p.employer_id <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.company_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> p.followers <span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">c</span>.followers
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> profile_id
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Highest number of products - <a href="https://datalemur.com/questions/sql-highest-products">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> num_products
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> user_transactions
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> user_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">having</span> <span style="color:#66d9ef">sum</span>(spend) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1000</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> num_products <span style="color:#66d9ef">desc</span>, <span style="color:#66d9ef">sum</span>(spend) <span style="color:#66d9ef">desc</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Spare server capacity - <a href="https://datalemur.com/questions/sql-spare-server-capacity">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> forecast <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> 
+</span></span><span style="display:flex;"><span>    datacenter_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(monthly_demand) over (partition <span style="color:#66d9ef">by</span> datacenter_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> total_demand
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> forecasted_demand
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> d.datacenter_id,
+</span></span><span style="display:flex;"><span>  monthly_capacity <span style="color:#f92672">-</span> f.total_demand
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> datacenters d
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> forecast f 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">on</span> f.datacenter_id <span style="color:#f92672">=</span> d.datacenter_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> d.datacenter_id
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Top rated businesses - <a href="https://datalemur.com/questions/sql-top-businesses">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> review_stars <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>) <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">as</span> business_count,
+</span></span><span style="display:flex;"><span>  round(
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> review_stars <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>) <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)::decimal 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>)::decimal) <span style="color:#66d9ef">as</span> top_rated_pct
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> reviews
+</span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Ad campaign ROAS - <a href="https://datalemur.com/questions/ad-campaign-roas">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  advertiser_id,
+</span></span><span style="display:flex;"><span>  round(<span style="color:#66d9ef">sum</span>(revenue)::decimal <span style="color:#f92672">/</span> <span style="color:#66d9ef">sum</span>(spend)::decimal,<span style="color:#ae81ff">2</span>) 
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">as</span> roas
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> ad_campaigns
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> advertiser_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> advertiser_id
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Revenue by product line - <a href="https://datalemur.com/questions/revenue-by-product-line">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> product_line,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(amount) over
+</span></span><span style="display:flex;"><span>    (partition <span style="color:#66d9ef">by</span> product_line) <span style="color:#66d9ef">as</span> total_revenue
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> transactions t 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">JOIN</span> product_info <span style="color:#66d9ef">as</span> p 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">on</span> t.product_id <span style="color:#f92672">=</span> p.product_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> total_revenue <span style="color:#66d9ef">DESC</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Trade-in payouts - <a href="https://datalemur.com/questions/trade-in-payouts">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> store_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">sum</span>(payout_amount) <span style="color:#66d9ef">as</span> payout_total
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> trade_in_transactions t
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> trade_in_payouts p
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">on</span> t.model_id <span style="color:#f92672">=</span> p.model_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> store_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> payout_total <span style="color:#66d9ef">desc</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Webinar popularity - <a href="https://datalemur.com/questions/snowflake-webinar-popularity">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  round(
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> event_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;webinar&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)::decimal
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>)::decimal
+</span></span><span style="display:flex;"><span>  ) <span style="color:#66d9ef">as</span> webinar_pct
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> marketing_touches
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;month&#39;</span>, event_date)<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> date_part(<span style="color:#e6db74">&#39;year&#39;</span>, event_date)<span style="color:#f92672">=</span><span style="color:#ae81ff">2022</span>
+</span></span></code></pre></div><p><strong>Question</strong></p>
+<blockquote>
+<p>Oracle sales quota - <a href="https://datalemur.com/questions/oracle-sales-quota">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> TotalSales <span style="color:#66d9ef">as</span> 
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> employee_id,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(deal_size) <span style="color:#66d9ef">as</span> total_sales
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> deals
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> employee_id
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  ts.employee_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> ts.total_sales <span style="color:#f92672">&gt;</span> s.quota <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;yes&#39;</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;no&#39;</span> <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> made_quota
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> TotalSales ts <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sales_quotas s
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">on</span> ts.employee_id <span style="color:#f92672">=</span> s.employee_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> ts.employee_id
+</span></span></code></pre></div><ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+    &copy;  My New Hugo Site 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

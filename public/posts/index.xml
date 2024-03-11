@@ -6,14 +6,28 @@
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Mar 2024 16:11:44 -0700</lastBuildDate>
+    <lastBuildDate>Mon, 11 Mar 2024 11:59:43 -0700</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Second Post</title>
+      <title>Sql Interview Medium</title>
+      <link>http://localhost:1313/posts/sql-interview-medium/</link>
+      <pubDate>Mon, 11 Mar 2024 11:59:43 -0700</pubDate>
+      <guid>http://localhost:1313/posts/sql-interview-medium/</guid>
+      <description>Question&#xA;Users&amp;rsquo;s third transaction - link&#xA;SELECT user_id, spend, transaction_date from (select user_id, spend, transaction_date, rank() over (partition by user_id order by transaction_date) as rnk from transactions) as r where r.rnk = 3 Question&#xA;Sending vs opening snaps - link&#xA;SELECT age_bucket, round(100.0 * CAST(sum(case when activity_type = &amp;#39;send&amp;#39; then time_spent else 0 end) as decimal) / cast(sum(case when activity_type in (&amp;#39;send&amp;#39;,&amp;#39;open&amp;#39;) then time_spent else 0 end) as decimal),2) as send_perc, round(100.</description>
+    </item>
+    <item>
+      <title>Sql interview questions on DataLemur</title>
+      <link>http://localhost:1313/posts/sql-interview/</link>
+      <pubDate>Mon, 11 Mar 2024 11:32:50 -0700</pubDate>
+      <guid>http://localhost:1313/posts/sql-interview/</guid>
+      <description>Question&#xA;Histogram of tweets - link&#xA;Example Output: tweet_bucket&#x9;users_num 1&#x9;2 2&#x9;1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&amp;#39;year&amp;#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question&#xA;Rolling average tweets - link&#xA;Example Output: user_id&#x9;tweet_date&#x9;rolling_avg_3d 111&#x9;06/01/2022 00:00:00&#x9;2.00 111&#x9;06/02/2022 00:00:00&#x9;1.50 111&#x9;06/03/2022 00:00:00&#x9;2.00 111&#x9;06/04/2022 00:00:00&#x9;2.</description>
+    </item>
+    <item>
+      <title>Braintree SQL coding challenge</title>
       <link>http://localhost:1313/posts/second-post/</link>
       <pubDate>Sun, 10 Mar 2024 16:11:44 -0700</pubDate>
       <guid>http://localhost:1313/posts/second-post/</guid>
-      <description>This is my second post&#xA;code&#xA;select * from foo </description>
+      <description>For this SQL challenge we&amp;rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&amp;rsquo;s go&#xA;Load data from CSV files Before loading to the DB we head each CSV file to examine the contents and note the column names which will become the table columns.&#xA;% head continent_map.csv country_code,continent_code ABW,NA AFG,AS . . . % head continents.csv continent_code,continent_name AF,Africa AS,Asia . .</description>
     </item>
   </channel>
 </rss>

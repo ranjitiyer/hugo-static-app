@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>Second Post | My New Hugo Site</title>
+    <title>Braintree SQL coding challenge | My New Hugo Site</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="This is my second post
-code
-select * from foo ">
+    <meta name="description" content="For this SQL challenge we&rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&rsquo;s go
+Load data from CSV files Before loading to the DB we head each CSV file to examine the contents and note the column names which will become the table columns.
+% head continent_map.csv country_code,continent_code ABW,NA AFG,AS . . . % head continents.csv continent_code,continent_name AF,Africa AS,Asia . .">
     <meta name="generator" content="Hugo 0.123.8">
     
     
@@ -35,25 +35,25 @@ select * from foo ">
       <link rel="canonical" href="http://localhost:1313/posts/second-post/">
     
 
-    <meta property="og:title" content="Second Post" />
-<meta property="og:description" content="This is my second post
-code
-select * from foo " />
+    <meta property="og:title" content="Braintree SQL coding challenge" />
+<meta property="og:description" content="For this SQL challenge we&rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&rsquo;s go
+Load data from CSV files Before loading to the DB we head each CSV file to examine the contents and note the column names which will become the table columns.
+% head continent_map.csv country_code,continent_code ABW,NA AFG,AS . . . % head continents.csv continent_code,continent_name AF,Africa AS,Asia . ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/posts/second-post/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-03-10T16:11:44-07:00" />
 <meta property="article:modified_time" content="2024-03-10T16:11:44-07:00" />
 
-<meta itemprop="name" content="Second Post">
-<meta itemprop="description" content="This is my second post
-code
-select * from foo "><meta itemprop="datePublished" content="2024-03-10T16:11:44-07:00" />
+<meta itemprop="name" content="Braintree SQL coding challenge">
+<meta itemprop="description" content="For this SQL challenge we&rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&rsquo;s go
+Load data from CSV files Before loading to the DB we head each CSV file to examine the contents and note the column names which will become the table columns.
+% head continent_map.csv country_code,continent_code ABW,NA AFG,AS . . . % head continents.csv continent_code,continent_name AF,Africa AS,Asia . ."><meta itemprop="datePublished" content="2024-03-10T16:11:44-07:00" />
 <meta itemprop="dateModified" content="2024-03-10T16:11:44-07:00" />
-<meta itemprop="wordCount" content="10">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Second Post"/>
-<meta name="twitter:description" content="This is my second post
-code
-select * from foo "/>
+<meta itemprop="wordCount" content="1087">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Braintree SQL coding challenge"/>
+<meta name="twitter:description" content="For this SQL challenge we&rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&rsquo;s go
+Load data from CSV files Before loading to the DB we head each CSV file to examine the contents and note the column names which will become the table columns.
+% head continent_map.csv country_code,continent_code ABW,NA AFG,AS . . . % head continents.csv continent_code,continent_name AF,Africa AS,Asia . ."/>
 
 	
   </head>
@@ -116,7 +116,7 @@ select * from foo "/>
   </div>
 
 
-      <h1 class="f1 athelas mt3 mb1">Second Post</h1>
+      <h1 class="f1 athelas mt3 mb1">Braintree SQL coding challenge</h1>
       
       
       
@@ -126,10 +126,271 @@ select * from foo "/>
       
       
     </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>This is my second post</p>
-<p><code>code</code></p>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>For this SQL challenge we&rsquo;re told to load country GDP data from CSV files into a database and answer some SQL questions. Let&rsquo;s go</p>
+<h3 id="load-data-from-csv-files">Load data from CSV files</h3>
+<p>Before loading to the DB we <code>head</code> each CSV file to examine the contents and note the column names which will become the table columns.</p>
+<pre tabindex="0"><code>% head continent_map.csv
+country_code,continent_code
+ABW,NA
+AFG,AS
+. . . 
+
+% head continents.csv
+continent_code,continent_name
+AF,Africa
+AS,Asia
+. . .
+
+% head countries.csv 
+country_code,country_name
+ABW,Aruba
+AND,Andorra
+. . .
+
+% head per_capita.csv| more
+country_code,year,gdp_per_capita
+ABW,2004,22566.68216
+AND,2004,29372.16674
+. . . 
+</code></pre><p>Then we create required tables</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> foo
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> countries
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    country_code varchar(<span style="color:#ae81ff">3</span>),
+</span></span><span style="display:flex;"><span>    country_name varchar(<span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> continents
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    continent_code varchar(<span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>    continent_name varchar(<span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> continent_map
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    country_code   varchar(<span style="color:#ae81ff">3</span>),
+</span></span><span style="display:flex;"><span>    continent_code varchar(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> gdp_per_capita
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    country_code   varchar(<span style="color:#ae81ff">3</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">year</span>           integer,
+</span></span><span style="display:flex;"><span>    gdp_per_capita numeric
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>It&rsquo;s finally time to load data and do a quick <code>select</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> continents <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/postgres/percapita/data_csv/continents.csv&#39;</span> <span style="color:#66d9ef">DELIMITER</span> <span style="color:#e6db74">&#39;,&#39;</span> CSV HEADER;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> continent_map <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/postgres/percapita/data_csv/continent_map.csv&#39;</span> <span style="color:#66d9ef">DELIMITER</span> <span style="color:#e6db74">&#39;,&#39;</span> CSV HEADER;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> countries <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/postgres/percapita/data_csv/countries.csv&#39;</span> <span style="color:#66d9ef">DELIMITER</span> <span style="color:#e6db74">&#39;,&#39;</span> CSV HEADER;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> gdp_per_capita <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/postgres/percapita/data_csv/per_capita.csv&#39;</span> <span style="color:#66d9ef">DELIMITER</span> <span style="color:#e6db74">&#39;,&#39;</span> CSV HEADER;
+</span></span></code></pre></div><p><code>select * from gdp_per_capita limit 1</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">country_code</th>
+<th style="text-align:left">year</th>
+<th style="text-align:left">gdp_per_capita</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ABW</td>
+<td style="text-align:left">2004</td>
+<td style="text-align:left">22566.68216</td>
+</tr>
+</tbody>
+</table>
+<p>And now onto the questions!</p>
+<p><strong>Question 1</strong></p>
+<blockquote>
+<p>Alphabetically list all of the country codes in the continent_map table that appear more than once. Display any values where country_code is null as country_code = &ldquo;FOO&rdquo; and make this row appear first in the list, even though it should alphabetically sort to the middle. Provide the results of this query as your answer.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> FooOnTop <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> country_code <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;AAA&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> country_code <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>                 <span style="color:#66d9ef">as</span> country_code,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">count</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> continent_map
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> country_code
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> country_code)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> country_code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AAA&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;FOO&#39;</span> <span style="color:#66d9ef">else</span> country_code <span style="color:#66d9ef">end</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">count</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> FooOnTop
+</span></span></code></pre></div><p><strong>Question 2</strong></p>
+<blockquote>
+<p>For all countries that have multiple rows in the continent_map table, delete all multiple records leaving only the 1 record per country. The record that you keep should be the first one when sorted by the continent_code alphabetically ascending. Provide the query/ies and explanation of step(s) that you follow to delete these records.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">start</span> <span style="color:#66d9ef">transaction</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#e6db74">&#39;Before Delete&#39;</span>, <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> continent_map;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Find duplicate country_codes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">with</span> Duplicates <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    country_code
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> continent_map
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> country_code
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>ToDelete <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>        row_number() over (partition <span style="color:#66d9ef">by</span> country_code <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> continent_code) <span style="color:#66d9ef">as</span> rn
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> continent_map
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> country_code <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> country_code <span style="color:#66d9ef">from</span> Duplicates)
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">from</span> continent_map
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span>
+</span></span><span style="display:flex;"><span>    (
+</span></span><span style="display:flex;"><span>        country_code <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> country_code <span style="color:#66d9ef">from</span> ToDelete <span style="color:#66d9ef">where</span> rn  <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">and</span>
+</span></span><span style="display:flex;"><span>        continent_code <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> continent_code <span style="color:#66d9ef">from</span> ToDelete <span style="color:#66d9ef">where</span> rn <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#e6db74">&#39;After delete&#39;</span>, <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> continent_map;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">rollback</span>
+</span></span></code></pre></div><p><strong>Question 3</strong></p>
+<blockquote>
+<p>List the countries ranked 10-12 in each continent by the percent of year-over-year growth descending from 2011 to 2012. The percent of growth should be calculated as: ((2012 gdp - 2011 gdp) / 2011 gdp)</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> yoy <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>        cont.continent_name,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">c</span>.country_code,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">c</span>.country_name,
+</span></span><span style="display:flex;"><span>        gdp.<span style="color:#66d9ef">year</span>,
+</span></span><span style="display:flex;"><span>        gdp_per_capita,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2012</span> <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>            round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> (
+</span></span><span style="display:flex;"><span>                (gdp.gdp_per_capita <span style="color:#f92672">-</span> lag(gdp_per_capita) over (partition <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">c</span>.country_code <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">year</span>))
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>                lag(gdp_per_capita) over (partition <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">c</span>.country_code <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">year</span>)),<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">as</span> yoy
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> countries <span style="color:#66d9ef">c</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continent_map cm <span style="color:#66d9ef">on</span> <span style="color:#66d9ef">c</span>.country_code <span style="color:#f92672">=</span> cm.country_code    <span style="color:#75715e">-- to get continent_code
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continents cont <span style="color:#66d9ef">on</span> cm.continent_code <span style="color:#f92672">=</span> cont.continent_code <span style="color:#75715e">-- to get continent name
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> gdp_per_capita gdp <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.country_code <span style="color:#75715e">-- to get gdp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">where</span> gdp.<span style="color:#66d9ef">year</span> <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">2011</span>,<span style="color:#ae81ff">2012</span>)),
+</span></span><span style="display:flex;"><span>Ranked <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>        rank() over (partition <span style="color:#66d9ef">by</span> continent_name <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> yoy <span style="color:#66d9ef">desc</span>) <span style="color:#66d9ef">as</span> rnk,
+</span></span><span style="display:flex;"><span>        continent_name,
+</span></span><span style="display:flex;"><span>        country_code,
+</span></span><span style="display:flex;"><span>        country_name,
+</span></span><span style="display:flex;"><span>        yoy::text <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;%&#39;</span> <span style="color:#66d9ef">as</span> growth_percent
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> yoy
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> yoy <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> Ranked
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> rnk <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">11</span>,<span style="color:#ae81ff">12</span>)
+</span></span></code></pre></div><p><strong>Question 4</strong></p>
+<blockquote>
+<p>For the year 2012, create a 3 column, 1 row report showing the percent share of gdp_per_capita for the following regions: (i) Asia, (ii) Europe, (iii) the Rest of the World. Your result should look something like
+Asia	Europe	Rest of World
+25.0%	25.0%	50.0%</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> <span style="color:#66d9ef">Share</span> <span style="color:#66d9ef">as</span>(
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">distinct</span> <span style="color:#66d9ef">c</span>.continent_code,
+</span></span><span style="display:flex;"><span>    round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">sum</span>(gdp_per_capita) over (partition <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">c</span>.
+</span></span><span style="display:flex;"><span>        continent_code)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(gdp_per_capita) over ()),<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> gdp_share
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> gdp_per_capita gdp
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continent_map <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.country_code
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2012</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> gdp_share <span style="color:#66d9ef">desc</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> continent_code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AS&#39;</span> <span style="color:#66d9ef">then</span> gdp_share <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)::text <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;%&#39;</span> <span style="color:#66d9ef">as</span> Asia,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> continent_code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;EU&#39;</span> <span style="color:#66d9ef">then</span> gdp_share <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)::text <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;%&#39;</span> <span style="color:#66d9ef">as</span> Europe,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> continent_code <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;AS&#39;</span>, <span style="color:#e6db74">&#39;EU&#39;</span>) <span style="color:#66d9ef">then</span> gdp_share <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>)::text <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;%&#39;</span> <span style="color:#66d9ef">as</span> RestofWorld
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#66d9ef">Share</span>
+</span></span></code></pre></div><p><strong>Question 5</strong></p>
+<blockquote>
+<p>What is the count of countries and sum of their related gdp_per_capita values for the year 2007 where the string &lsquo;an&rsquo; (case insensitive) appears anywhere in the country name?</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">count</span>,
+</span></span><span style="display:flex;"><span>    concat(<span style="color:#e6db74">&#39;$&#39;</span>, round(ceil(<span style="color:#66d9ef">sum</span>(gdp_per_capita))))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> gdp_per_capita gdp <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> countries <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.country_code
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">lower</span>(<span style="color:#66d9ef">c</span>.country_name) <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;%an%&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2007</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- 4b. Repeat question 4a, but this time make the query case sensitive.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">count</span>,
+</span></span><span style="display:flex;"><span>    concat(<span style="color:#e6db74">&#39;$&#39;</span>, round(ceil(<span style="color:#66d9ef">sum</span>(gdp_per_capita))))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> gdp_per_capita gdp <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> countries <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.country_code
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">c</span>.country_name <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;%an%&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2007</span>
+</span></span></code></pre></div><p><strong>Question 6</strong></p>
+<blockquote>
+<p>Find the sum of gpd_per_capita by year and the count of countries for each year that have non-null gdp_per_capita where (i) the year is before 2012 and (ii) the country has a null gdp_per_capita in 2012. Your result should have the columns: year, country_count, total</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> CountriesIn2012WithNullGdp
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>    (
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> country_code
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">from</span> gdp_per_capita
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">where</span> gdp_per_capita <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">and</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2012</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">distinct</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">year</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(gdp_per_capita) over (partition <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">year</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> gdp_per_capita <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) over (partition <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">year</span>) <span style="color:#66d9ef">as</span> country_count
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> gdp_per_capita
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2012</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> country_code <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> country_code <span style="color:#66d9ef">from</span> CountriesIn2012WithNullGdp)
+</span></span></code></pre></div><p><strong>Question 7</strong></p>
+<blockquote>
+<p>Create a single list of all per_capita records for year 2009 that includes columns: continent_name,country_code,country_name, gdp_per_capital</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    continent_name,
+</span></span><span style="display:flex;"><span>       gdp.country_code,
+</span></span><span style="display:flex;"><span>       country_name,
+</span></span><span style="display:flex;"><span>       gdp_per_capita,
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">sum</span>(gdp_per_capita) over (partition <span style="color:#66d9ef">by</span> continent_name <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> continent_name, substr(country_name,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">desc</span>
+</span></span><span style="display:flex;"><span>                range <span style="color:#66d9ef">between</span> unbounded preceding <span style="color:#66d9ef">and</span> <span style="color:#66d9ef">current</span> <span style="color:#66d9ef">row</span>) <span style="color:#66d9ef">as</span> running_total
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span>
+</span></span><span style="display:flex;"><span>    gdp_per_capita gdp <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continent_map cmap <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> cmap.country_code
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> countries <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.country_code
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continents cont <span style="color:#66d9ef">on</span> cont.continent_code <span style="color:#f92672">=</span> cmap.continent_code
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">year</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2009</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> continent_name, substr(country_name,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">desc</span>
+</span></span></code></pre></div><p><strong>Question 8</strong></p>
+<blockquote>
+<p>Find the country with the highest average gdp_per_capita for each continent for all years.</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> AvgGdp <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">map</span>.continent_code,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">c</span>.country_name,
+</span></span><span style="display:flex;"><span>    round(<span style="color:#66d9ef">avg</span>(gdp_per_capita),<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">avg</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> gdp_per_capita gdp <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> continent_map <span style="color:#66d9ef">map</span> <span style="color:#66d9ef">on</span> gdp.country_code <span style="color:#f92672">=</span> <span style="color:#66d9ef">map</span>.country_code
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> countries <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> <span style="color:#66d9ef">c</span>.country_code <span style="color:#f92672">=</span> gdp.country_code
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">map</span>.continent_code,<span style="color:#66d9ef">c</span>.country_name
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">map</span>.continent_code),
+</span></span><span style="display:flex;"><span>Ranked <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>    rank() over (partition <span style="color:#66d9ef">by</span> continent_code <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">avg</span> <span style="color:#66d9ef">desc</span>) <span style="color:#66d9ef">as</span> rnk
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> AvgGdp)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> Ranked
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> rnk <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> continent_code
 </span></span></code></pre></div><ul class="pa0">
   
 </ul>
