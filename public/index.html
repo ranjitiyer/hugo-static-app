@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -35,13 +35,13 @@
     
 
     
-      <link rel="canonical" href="http://localhost:1313/">
+      <link rel="canonical" href="https://example.org/">
     
 
     <meta property="og:title" content="My New Hugo Site" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="http://localhost:1313/" />
+<meta property="og:url" content="https://example.org/" />
 
 <meta itemprop="name" content="My New Hugo Site">
 <meta itemprop="description" content=""><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="My New Hugo Site"/>
@@ -122,6 +122,32 @@
       
       <div class="blah w-100">
         <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/posts/sql-interview-hard/" class="color-inherit dim link">
+            Sql Interview Hard
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          Questions
+Active user retention link
+with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link
+        </div>
+          <a href="/posts/sql-interview-hard/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+          <div class="relative w-100 mb4">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
+    <div class="flex flex-column flex-row-ns">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
           <a href="/posts/dates-postgres/" class="color-inherit dim link">
             Dates in Postgres
             </a>
@@ -167,40 +193,18 @@ SELECT age_bucket, round(100.0 * CAST(sum(case when activity_type = &#39;send&#3
 
           </div>
         
-          <div class="relative w-100 mb4">
-            
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="/posts/sql-interview/" class="color-inherit dim link">
-            Sql interview questions on DataLemur
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          Question
-Histogram of tweets - link
-Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select count(*) as num_tweets, user_id from tweets where date_part(&#39;year&#39;, tweet_date) = 2022 group by user_id ) select num_tweets as tweet_bucket, count(*) as user_num from tweets_per_user group by tweet_bucket Question
-Rolling average tweets - link
-Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2.
-        </div>
-          <a href="/posts/sql-interview/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
-        
-      </div>
-    </div>
-  </div>
-</article>
-
-          </div>
-        
       </section>
 
       
       <section class="w-100">
         <h1 class="f3">More</h1>
         
+        
+          <h2 class="f5 fw4 mb4 dib mr3">
+            <a href="/posts/sql-interview/" class="link black dim">
+              Sql interview questions on DataLemur
+            </a>
+          </h2>
         
           <h2 class="f5 fw4 mb4 dib mr3">
             <a href="/posts/second-post/" class="link black dim">
@@ -222,7 +226,7 @@ Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 1
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
     &copy;  My New Hugo Site 2024 
   </a>
     <div>

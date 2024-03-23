@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Sql Interview Hard | My New Hugo Site</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Questions
+Active user retention link
+with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link">
+    <meta name="generator" content="Hugo 0.123.8">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/sql-interview-hard/">
+    
+
+    <meta property="og:title" content="Sql Interview Hard" />
+<meta property="og:description" content="Questions
+Active user retention link
+with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.org/posts/sql-interview-hard/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-22T21:27:03-07:00" />
+<meta property="article:modified_time" content="2024-03-22T21:27:03-07:00" />
+
+<meta itemprop="name" content="Sql Interview Hard">
+<meta itemprop="description" content="Questions
+Active user retention link
+with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link"><meta itemprop="datePublished" content="2024-03-22T21:27:03-07:00" />
+<meta itemprop="dateModified" content="2024-03-22T21:27:03-07:00" />
+<meta itemprop="wordCount" content="491">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Sql Interview Hard"/>
+<meta name="twitter:description" content="Questions
+Active user retention link
+with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link"/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        My New Hugo Site
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Sql Interview Hard</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-03-22T21:27:03-07:00">March 22, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><strong>Questions</strong></p>
+<blockquote>
+<p>Active user retention <a href="https://datalemur.com/questions/user-retention">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> ActiveUsers <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> 
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  date_part(<span style="color:#e6db74">&#39;month&#39;</span>, event_date) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">Month</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">max</span>(<span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> event_type <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;sign-in&#39;</span>, <span style="color:#e6db74">&#39;like&#39;</span>, <span style="color:#e6db74">&#39;comment&#39;</span>) <span style="color:#66d9ef">then</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">end</span>) over (partition <span style="color:#66d9ef">by</span> user_id, date_part(<span style="color:#e6db74">&#39;month&#39;</span>, event_date))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> IsActive
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> user_actions
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;month&#39;</span>, event_date) <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;06&#39;</span>,<span style="color:#e6db74">&#39;07&#39;</span>)),
+</span></span><span style="display:flex;"><span>SideBySide <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">Month</span>,
+</span></span><span style="display:flex;"><span>  lag(<span style="color:#66d9ef">Month</span>) over (partition <span style="color:#66d9ef">by</span> user_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">Month</span>) <span style="color:#66d9ef">as</span> PrevMonth
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> ActiveUsers)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">Month</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> SideBySide
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> <span style="color:#66d9ef">Month</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span> <span style="color:#66d9ef">and</span> PrevMonth <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">Month</span>
+</span></span></code></pre></div><blockquote>
+<p>Active User growth <a href="https://datalemur.com/questions/yoy-growth-rate">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">With</span> SpendPerYear <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> 
+</span></span><span style="display:flex;"><span>    product_id,
+</span></span><span style="display:flex;"><span>    date_part(<span style="color:#e6db74">&#39;year&#39;</span>, transaction_date) <span style="color:#66d9ef">as</span> theyear,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(spend) over (partition <span style="color:#66d9ef">by</span> product_id, date_part(<span style="color:#e6db74">&#39;year&#39;</span>, transaction_date))
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">as</span> spend
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> user_transactions),
+</span></span><span style="display:flex;"><span>YoY <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>    theyear,
+</span></span><span style="display:flex;"><span>    product_id,
+</span></span><span style="display:flex;"><span>    spend <span style="color:#66d9ef">as</span> curr_year_spend,
+</span></span><span style="display:flex;"><span>    lag(spend) over (partition <span style="color:#66d9ef">by</span> product_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> theyear) <span style="color:#66d9ef">as</span> prev_year_spend
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> SpendPerYear
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  theyear <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">year</span>,
+</span></span><span style="display:flex;"><span>  product_id,
+</span></span><span style="display:flex;"><span>  curr_year_spend,
+</span></span><span style="display:flex;"><span>  prev_year_spend,
+</span></span><span style="display:flex;"><span>  round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> ((curr_year_spend::decimal <span style="color:#f92672">-</span> prev_year_spend::decimal)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span> prev_year_spend::decimal),<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> yoy_rate
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> YoY
+</span></span></code></pre></div><blockquote>
+<p>Median Google Search Frequency <a href="https://datalemur.com/questions/median-search-freq">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- make search repeat num_users times for each row
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- 1 | 2 | [1,1]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- 2 | 2 | [2,2]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- 3 | 3 | [3,3,3]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">with</span> Flattened <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  searches,
+</span></span><span style="display:flex;"><span>  num_users,
+</span></span><span style="display:flex;"><span>  GENERATE_SERIES(<span style="color:#ae81ff">1</span>,num_users)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> search_frequency)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  round(PERCENTILE_CONT(<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">5</span>) within <span style="color:#66d9ef">group</span> (<span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> searches)::decimal,<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> Flattened
+</span></span></code></pre></div><blockquote>
+<p>Advertiser Status <a href="https://datalemur.com/questions/updated-status">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> CurrentPayment <span style="color:#66d9ef">AS</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  coalesce(a.user_id,p.user_id) <span style="color:#66d9ef">as</span> user_id,
+</span></span><span style="display:flex;"><span>  a.status,
+</span></span><span style="display:flex;"><span>  p.paid
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>  advertiser a <span style="color:#66d9ef">FULL</span> <span style="color:#66d9ef">OUTER</span> <span style="color:#66d9ef">JOIN</span> daily_pay p 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">on</span> a.user_id <span style="color:#f92672">=</span> p.user_id)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;NEW&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;EXISTING&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;NEW&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;CHURN&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;EXISTING&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;EXISTING&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;EXISTING&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;CHURN&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;CHURN&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;RESURRECT&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;CHURN&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;CHURN&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;RESURRECT&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;EXISTING&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;RESURRECT&#39;</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;CHURN&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">when</span> status <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">and</span> paid <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;NEW&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">as</span> new_status
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> CurrentPayment
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> user_id
+</span></span></code></pre></div><blockquote>
+<p>Consecutive filing years <a href="https://datalemur.com/questions/consecutive-filing-years">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> FiledWithTurbo <span style="color:#66d9ef">AS</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> user_id,
+</span></span><span style="display:flex;"><span>    date_part(<span style="color:#e6db74">&#39;year&#39;</span>, filing_date) <span style="color:#66d9ef">as</span> theYear
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> filed_taxes
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> product <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;TurboTax%&#39;</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>Lookahead <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> user_id,
+</span></span><span style="display:flex;"><span>  theYear,
+</span></span><span style="display:flex;"><span>  generate_series(theYear::int, (theYear<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>)::int) <span style="color:#66d9ef">as</span> nextYear
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> FiledWithTurbo  
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">distinct</span> t.user_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> FiledWithTurbo t <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> Lookahead l
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">on</span> t.user_id <span style="color:#f92672">=</span> l.user_id <span style="color:#66d9ef">and</span> t.theyear <span style="color:#f92672">=</span> l.nextYear
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> t.user_id, t.theyear
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><blockquote>
+<p>3-topping Pizza (<a href="https://datalemur.com/questions/pizzas-topping-cost">https://datalemur.com/questions/pizzas-topping-cost</a>)</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>  concat(a.topping_name,<span style="color:#e6db74">&#39;,&#39;</span>,b.topping_name,<span style="color:#e6db74">&#39;,&#39;</span>,<span style="color:#66d9ef">c</span>.topping_name) <span style="color:#66d9ef">as</span> pizza,
+</span></span><span style="display:flex;"><span>  a.ingredient_cost <span style="color:#f92672">+</span> b.ingredient_cost <span style="color:#f92672">+</span> <span style="color:#66d9ef">c</span>.ingredient_cost <span style="color:#66d9ef">as</span> total_cost
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>  pizza_toppings a
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">cross</span> <span style="color:#66d9ef">join</span>
+</span></span><span style="display:flex;"><span>  pizza_toppings b
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">cross</span> <span style="color:#66d9ef">join</span>
+</span></span><span style="display:flex;"><span>  pizza_toppings <span style="color:#66d9ef">c</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> a.topping_name <span style="color:#f92672">&lt;</span> b.topping_name
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> b.topping_name <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">c</span>.topping_name
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--and a.topping_name &lt;&gt; c.topping_name
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> total_cost <span style="color:#66d9ef">desc</span>, pizza
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--order by a.topping_name,b.topping_name,c.topping_name
+</span></span></span></code></pre></div><blockquote>
+<p>Total Server Utilization time <a href="https://datalemur.com/questions/total-utilization-time">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> RowNum <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> server_id,
+</span></span><span style="display:flex;"><span>  session_status,
+</span></span><span style="display:flex;"><span>  status_time,
+</span></span><span style="display:flex;"><span>  row_number() over (partition <span style="color:#66d9ef">by</span> server_id, session_status
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> status_time
+</span></span><span style="display:flex;"><span>  )
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>server_utilization),
+</span></span><span style="display:flex;"><span>UpTimes <span style="color:#66d9ef">as</span> 
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>  server_id, row_number,
+</span></span><span style="display:flex;"><span>  status_time <span style="color:#f92672">-</span> lag(status_time) over (
+</span></span><span style="display:flex;"><span>    partition <span style="color:#66d9ef">by</span> server_id, row_number 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> status_time)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">as</span> uptime
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> RowNum)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  round(<span style="color:#66d9ef">extract</span>(days <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">sum</span>(uptime))
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">extract</span>(hours <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">sum</span>(uptime)) <span style="color:#f92672">/</span> <span style="color:#ae81ff">24</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> total_uptime_days
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> UpTimes
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> uptime <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>
+</span></span></code></pre></div><ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
+    &copy;  My New Hugo Site 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

@@ -2,26 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/dates-postgres/</loc>
+    <loc>https://example.org/</loc>
+    <lastmod>2024-03-22T21:27:03-07:00</lastmod>
+  </url><url>
+    <loc>https://example.org/posts/</loc>
+    <lastmod>2024-03-22T21:27:03-07:00</lastmod>
+  </url><url>
+    <loc>https://example.org/posts/sql-interview-hard/</loc>
+    <lastmod>2024-03-22T21:27:03-07:00</lastmod>
+  </url><url>
+    <loc>https://example.org/posts/dates-postgres/</loc>
     <lastmod>2024-03-19T21:17:15-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2024-03-19T21:17:15-07:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-03-19T21:17:15-07:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/sql-interview-medium/</loc>
+    <loc>https://example.org/posts/sql-interview-medium/</loc>
     <lastmod>2024-03-11T11:59:43-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sql-interview/</loc>
+    <loc>https://example.org/posts/sql-interview/</loc>
     <lastmod>2024-03-11T11:32:50-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/second-post/</loc>
+    <loc>https://example.org/posts/second-post/</loc>
     <lastmod>2024-03-10T16:11:44-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://example.org/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://example.org/tags/</loc>
   </url>
 </urlset>
