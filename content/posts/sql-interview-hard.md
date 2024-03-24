@@ -71,7 +71,7 @@ with Flattened as
 (select 
   searches,
   num_users,
-  GENERATE_SERIES(1,num_users)
+  generate_series(1,num_users)
 from search_frequency)
 select 
   round(PERCENTILE_CONT(0.5) within group (order by searches)::decimal,1)
@@ -178,4 +178,41 @@ select
     as total_uptime_days
   from UpTimes
 where uptime is not null
+```
+
+> Same week purchases [link](https://datalemur.com/questions/same-week-purchases)
+
+```sql
+with RankedPurchases as
+(
+  select 
+    user_id,
+    purchase_date,
+    row_number() over (partition by user_id order by purchase_date)
+      as rnum
+  from user_purchases
+),
+-- we get their first purchase date
+FirstPurchase as
+(
+  select user_id, purchase_date
+  from RankedPurchases where rnum = 1
+),
+-- all signed up users must be counted
+-- even those that never had a purchase
+SignsUpJoinedWithFirstPurchase as 
+(
+  select s.user_id,
+    s.signup_date,
+    case when p.purchase_date is not null
+      then p.purchase_date - s.signup_date 
+    else null end as first_purchase_after_signup
+  from signups s left join firstpurchase p
+      on s.user_id = p.user_id
+)
+select
+  round(100.0 * (count(*) filter (where first_purchase_after_signup 
+    < '7 days'::interval)::decimal
+    / count(*)::decimal),2)
+from SignsUpJoinedWithFirstPurchase
 ```
