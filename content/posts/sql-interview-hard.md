@@ -216,3 +216,38 @@ select
     / count(*)::decimal),2)
 from SignsUpJoinedWithFirstPurchase
 ```
+
+
+> Bad Delivery Rate [link](https://datalemur.com/questions/sql-bad-experience)
+
+```sql
+-- orders within 14 days in June 2022
+  -- orders x customer_id
+with OrdersWithin14 as
+(
+  select 
+      o.order_id,
+      c.customer_id,
+      o.trip_id,
+      o.order_timestamp,
+      c.signup_timestamp
+    from orders o inner join customers c 
+      on o.customer_id = c.customer_id
+  where date_trunc('month', signup_timestamp) = '2022-06-01'::date
+    and o.order_timestamp::date - c.signup_timestamp::date < 14
+)
+OrdersDeliveredIncorrectly as
+(
+  select 
+    count(*) as delivered_incorrectly, 0 as total
+  from OrdersWithin14 o inner join orders orders
+    on o.order_id = orders.order_id
+  where status <> 'completed successfully'
+  union all
+  select 0 as delivered_incorrectly, count(*) as total
+  from OrdersWithin14
+)
+select round(100.0 * (sum(delivered_incorrectly)::decimal/sum(total)::decimal),2)
+  as bad_experience_pct
+from OrdersDeliveredIncorrectly
+```
