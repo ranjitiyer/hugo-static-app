@@ -251,3 +251,21 @@ select round(100.0 * (sum(delivered_incorrectly)::decimal/sum(total)::decimal),2
   as bad_experience_pct
 from OrdersDeliveredIncorrectly
 ```
+
+> Follow-up Airpods percentage [link](https://datalemur.com/questions/follow-up-airpod-percentage)
+
+```sql
+-- use lag to look at the previous row
+with PrevProduct as
+(
+  select *,
+  lag(product_name)
+    over (partition by customer_id order by 
+      transaction_timestamp, product_name desc) as prev
+  from transactions
+)
+select 
+  round(100.0 * (count(*) filter (where product_name = 'AirPods' and prev = 'iPhone')::decimal
+    / count(distinct customer_id)::decimal)) as follow_up_percentage
+from PrevProduct
+```
