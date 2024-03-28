@@ -13,7 +13,7 @@
       <link>https://example.org/posts/csharp-linq/</link>
       <pubDate>Thu, 28 Mar 2024 15:51:33 -0700</pubDate>
       <guid>https://example.org/posts/csharp-linq/</guid>
-      <description>Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&amp;rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&amp;rsquo;d like to implement all the SQL challenges on DataLemur using C#.&#xA;GroupBy and Max&#xA;Here we solve a very common SQL exercise to return the maximum salary earned in each department.</description>
+      <description>Enumerables in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&amp;rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&amp;rsquo;d like to implement all the SQL challenges on DataLemur using C#.&#xA;GroupBy and Max&#xA;Here we solve a very common SQL exercise to return the maximum salary earned in each department.</description>
     </item>
     <item>
       <title>Sql Interview Hard</title>

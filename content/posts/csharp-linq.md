@@ -3,11 +3,11 @@ title = 'Csharp Linq'
 date = 2024-03-28T15:51:33-07:00
 +++
 
-Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I've had opportunities to use Linq at work and here are some example drills. Someone day, I'd like to implement all the SQL challenges on DataLemur using C#.
+Enumerables in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I've had opportunities to use Linq at work and here are some example drills. Someone day, I'd like to implement all the SQL challenges on DataLemur using C#.
 
 > GroupBy and Max
 
-Here we solve a very common SQL exercise to return the maximum salary earned in each department. In it's most basic for `GroupBy` lets us specify a grouping key and gives us a tuple of with department record as the key and an enumerable of employee objects that map to it. We can then return an anonymous object with just the relevant pieces of information required for reporting the result. 
+Here we solve a very common SQL exercise to return the maximum salary earned in each department. In it's most basic form `GroupBy` lets us specify a grouping key and gives us a tuple of with department record as the key and an enumerable of employee objects that map to it. We can then return an anonymous object with just the relevant pieces of information required for reporting the result. 
 
 ```csharp
 record Employee (int empId, string department, int salary);
@@ -241,4 +241,4 @@ var communicationsNoPayment = Communications.Where(c => !Payments.Any(payment =>
 communicationsNoPayment.Select(c => commScore[c.medium] -= 0.2);
 ```
 
-Linq also support a query syntax which is a custom SQL-like DSL in addition to the method syntax which we have explored in this post. Please visit [MSDN](https://learn.microsoft.com/en-us/dotnet/standard/linq/#language-level-query-syntax) for more information about Linq
+Linq also support a query syntax, a custom SQL-like DSL in addition to the method syntax explored in this post. To learn more about Linq please the official [MSDN](https://learn.microsoft.com/en-us/dotnet/standard/linq/#language-level-query-syntax) website.
