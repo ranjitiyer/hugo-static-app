@@ -49,7 +49,7 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 GroupBy and Max
 Here we solve a very common SQL exercise to return the maximum salary earned in each department."><meta itemprop="datePublished" content="2024-03-28T15:51:33-07:00" />
 <meta itemprop="dateModified" content="2024-03-28T15:51:33-07:00" />
-<meta itemprop="wordCount" content="473">
+<meta itemprop="wordCount" content="1246">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Csharp Linq"/>
 <meta name="twitter:description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
 GroupBy and Max
@@ -152,7 +152,7 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><blockquote>
-<p>Left Join</p>
+<p>Left Join and Aggregation</p>
 </blockquote>
 <p>This examples demonstrates the need for a left-join achieved using the <code>GroupJoin</code> method on a collection. We&rsquo;re asked to report the percentage of shipments sent to a user&rsquo;s home address as opposed to elsewhere. Recognizing that a user may not have a shipment, we place <code>Users</code> on the left side of the join. Then we specify the outer and inner key to match rows on either side and expect to get an <code>null</code> list of transactions for users that haven&rsquo;t bought anything. This we handle with the null check and return 0. The result is a just a count of shipments sent to a home address for which we use the <code>Aggregate</code> function that takes a <code>seed</code> to set the  accumulator value of the lambda which is rolled up to a single number. This we divide by the total shipments to get our answer</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Transaction</span>(<span style="color:#66d9ef">int</span> txId, <span style="color:#66d9ef">int</span> userId, <span style="color:#66d9ef">string</span> shippedAddress);
@@ -194,6 +194,147 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ordersShippedToHome / txs.Length;
 </span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>Inner joins, Grouping, Left join</p>
+</blockquote>
+<p>We first set up the records / &rsquo;tables&rsquo; relevant for this exercise. There are bills to be paid, communications that were sent and payments received and we&rsquo;ll do some slicing over data in this domain.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Bill</span>(<span style="color:#66d9ef">string</span> patientId, <span style="color:#66d9ef">int</span> billAmount, <span style="color:#66d9ef">long</span> sentTimestamp);
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Communication</span>(<span style="color:#66d9ef">string</span> patientId, <span style="color:#66d9ef">string</span> medium, <span style="color:#66d9ef">long</span> billAmount, <span style="color:#66d9ef">long</span> sentTimestamp,
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">long</span> score = <span style="color:#66d9ef">default</span>);
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Payment</span>(<span style="color:#66d9ef">string</span> patientId, <span style="color:#66d9ef">int</span> paymentAmount, <span style="color:#66d9ef">long</span> paidTimestamp);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>List&lt;Bill&gt; Bills =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p1&#34;, 100, 10000),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, 200, 10010),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, 400, 10020),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p3&#34;, 500, 10020),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>List&lt;Payment&gt; Payments =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p1&#34;, 100, 100010),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, 400, 100030),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>List&lt;Communication&gt; Communications =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p1&#34;, &#34;sms&#34;, 100, 10001),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p1&#34;, &#34;text&#34;, 100, 10002),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, &#34;text&#34;, 100, 10004),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, &#34;email&#34;, 400, 10003),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p2&#34;, &#34;email&#34;, 400, 10005),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"> new(&#34;p3&#34;, &#34;email&#34;, 500, 10020),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">]</span>;
+</span></span></code></pre></div><p>First we&rsquo;re asking for all the paid bills which requires joining bills and payments with a simple inner join but with a compound primary key using the patient id and bill amount.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> paidBills = Bills
+</span></span><span style="display:flex;"><span> .Join(Payments, bill =&gt; bill.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + bill.billAmount,
+</span></span><span style="display:flex;"><span>     payment =&gt; payment.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + payment.paymentAmount
+</span></span><span style="display:flex;"><span>     , (bill, payment) =&gt; <span style="color:#66d9ef">new</span> { bill.patientId, bill.billAmount }).ToList();
+</span></span><span style="display:flex;"><span>paidBills.ForEach(b =&gt; Console.WriteLine(<span style="color:#e6db74">$&#34;{b.patientId} : {b.billAmount}&#34;</span>));
+</span></span></code></pre></div><p>A typical use of <code>GroupBy</code> would ask an aggregate question about an entity. In this case we&rsquo;re counting the number of bills sent out per patient. Since the <code>GroupBy</code> gives us an Enumerable collection of items belonging to a group, we can simply <code>Count</code> over it and get the answer.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>Bills.GroupBy(
+</span></span><span style="display:flex;"><span>     b =&gt; b.patientId, 
+</span></span><span style="display:flex;"><span>     bill =&gt; bill, 
+</span></span><span style="display:flex;"><span>     (patientId, bills) =&gt; <span style="color:#66d9ef">new</span> { patientId, TotalBills = bills.Count() })
+</span></span><span style="display:flex;"><span> .ToList()
+</span></span><span style="display:flex;"><span> .ForEach(bill =&gt; Console.WriteLine(<span style="color:#e6db74">$&#34;Patient {bill.patientId} : {bill.TotalBills} bills&#34;</span>));
+</span></span></code></pre></div><p>We might now want to know how many bills were paid without any communication sent to the patient, which is a little bit more involved. We setup a result set for bills paid and communication count</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> billsPaidAndCommuications = Bills
+</span></span><span style="display:flex;"><span> .Join(Payments, bill =&gt; bill.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + bill.billAmount,
+</span></span><span style="display:flex;"><span>     payment =&gt; payment.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + payment.paymentAmount
+</span></span><span style="display:flex;"><span>     , (bill, payment) =&gt; <span style="color:#66d9ef">new</span>
+</span></span><span style="display:flex;"><span>     {
+</span></span><span style="display:flex;"><span>         bill.patientId,
+</span></span><span style="display:flex;"><span>         billTimestamp = bill.sentTimestamp,
+</span></span><span style="display:flex;"><span>         bill.billAmount,
+</span></span><span style="display:flex;"><span>         payment.paidTimestamp
+</span></span><span style="display:flex;"><span>     })
+</span></span><span style="display:flex;"><span> .GroupJoin(Communications,
+</span></span><span style="display:flex;"><span>     arg =&gt; arg.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + arg.billAmount,
+</span></span><span style="display:flex;"><span>     communication =&gt; communication.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + communication.billAmount,
+</span></span><span style="display:flex;"><span>     (billAndPayment, communications) =&gt;
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">new</span> { BillAndPayment = billAndPayment, Communications = communications }).ToList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>billsPaidAndCommuications.ForEach(obj =&gt;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> billAndPayments = obj.BillAndPayment;
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> comms = obj.Communications;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> Console.WriteLine(<span style="color:#e6db74">$&#34;Payment for {billAndPayments.patientId} for amount {billAndPayments.billAmount} &#34;</span> +
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">$&#34; billed on {billAndPayments.billTimestamp} &#34;</span> +
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">$&#34;was paid on {billAndPayments.paidTimestamp} after &#34;</span> +
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">$&#34;{comms.Count()} messages were sent&#34;</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">double</span>&gt; CalculateEffectiveness2()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">// all the Paid bills</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> paidBills = Bills
+</span></span><span style="display:flex;"><span>     .Join(Payments, bill =&gt; bill.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + bill.billAmount,
+</span></span><span style="display:flex;"><span>         payment =&gt; payment.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + payment.paymentAmount
+</span></span><span style="display:flex;"><span>         , (bill, payment) =&gt; <span style="color:#66d9ef">new</span> { bill.patientId, bill.billAmount }).ToList();
+</span></span><span style="display:flex;"><span> Console.WriteLine(<span style="color:#e6db74">&#34;All the paid bills&#34;</span>);
+</span></span><span style="display:flex;"><span> paidBills.ForEach(b =&gt; Console.WriteLine(<span style="color:#e6db74">$&#34;{b.patientId} : {b.billAmount}&#34;</span>));
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">// Bills payed without communication</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">var</span> billsPaidAndCommuications = Bills
+</span></span><span style="display:flex;"><span>     .Join(Payments, bill =&gt; bill.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + bill.billAmount,
+</span></span><span style="display:flex;"><span>         payment =&gt; payment.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + payment.paymentAmount
+</span></span><span style="display:flex;"><span>         , (bill, payment) =&gt; <span style="color:#66d9ef">new</span>
+</span></span><span style="display:flex;"><span>         {
+</span></span><span style="display:flex;"><span>             bill.patientId,
+</span></span><span style="display:flex;"><span>             billTimestamp = bill.sentTimestamp,
+</span></span><span style="display:flex;"><span>             bill.billAmount,
+</span></span><span style="display:flex;"><span>             payment.paidTimestamp
+</span></span><span style="display:flex;"><span>         })
+</span></span><span style="display:flex;"><span>     .GroupJoin(Communications,
+</span></span><span style="display:flex;"><span>         arg =&gt; arg.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + arg.billAmount,
+</span></span><span style="display:flex;"><span>         communication =&gt; communication.patientId + <span style="color:#e6db74">&#34;-&#34;</span> + communication.billAmount,
+</span></span><span style="display:flex;"><span>         (billAndPayment, communications) =&gt;
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">new</span> { BillAndPayment = billAndPayment, Communications = communications }).ToList();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> billsPaidAndCommuications.ForEach(obj =&gt;
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">var</span> billAndPayments = obj.BillAndPayment;
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">var</span> comms = obj.Communications;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     Console.WriteLine(<span style="color:#e6db74">$&#34;Payment for {billAndPayments.patientId} for amount {billAndPayments.billAmount} &#34;</span> +
+</span></span><span style="display:flex;"><span>                       <span style="color:#e6db74">$&#34; billed on {billAndPayments.billTimestamp} &#34;</span> +
+</span></span><span style="display:flex;"><span>                       <span style="color:#e6db74">$&#34;was paid on {billAndPayments.paidTimestamp} after &#34;</span> +
+</span></span><span style="display:flex;"><span>                       <span style="color:#e6db74">$&#34;{comms.Count()} messages were sent&#34;</span>);
+</span></span><span style="display:flex;"><span> });
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>How effective were these communications in getting a patient to pay their outstanding bill? The&rsquo;s different ways of score an outreach method (text/email/sms), but we can start with a simple scheme below where each outreach for a paid bill receives an equally weighted fraction of the total comms sent resulting in a payment. We then penalize communications by a fixed (and totally random amount) that didn&rsquo;t result in any payment and then report <code>commScore</code> as the result (a dictionary to communication means and it&rsquo;s score). THis example also demonstrates the use of <code>Distinct</code> and <code>ToDictionary</code> to convert a list to a dictionary.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Intialize a score for all distinct communication mediums</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> commScore = Communications.Select(c =&gt; c.medium).Distinct().ToDictionary(c =&gt; c, c=&gt; <span style="color:#ae81ff">0.0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Find communications that resulted in a payment</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> paymentToComms = Payments.Select(payment =&gt; 
+</span></span><span style="display:flex;"><span>    (payment, Communications.Where(c =&gt;
+</span></span><span style="display:flex;"><span>        c.patientId == payment.patientId
+</span></span><span style="display:flex;"><span>        &amp;&amp; c.billAmount == payment.paymentAmount
+</span></span><span style="display:flex;"><span>        &amp;&amp; c.sentTimestamp &lt; payment.paidTimestamp)))
+</span></span><span style="display:flex;"><span>    .ToDictionary(tuple =&gt; tuple.payment, tuple=&gt; tuple.Item2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// score based on number of attempts it took to realize a payment</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> key <span style="color:#66d9ef">in</span> paymentToComms.Keys)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> allComms = paymentToComms[key].ToList();
+</span></span><span style="display:flex;"><span>    allComms.ForEach(comm =&gt;
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> score = (<span style="color:#66d9ef">double</span>) <span style="color:#ae81ff">1</span> / allComms.Count();
+</span></span><span style="display:flex;"><span>        commScore[comm.medium] += score;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Penalize communications that didn&#39;t result in a payment</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> communicationsNoPayment = Communications.Where(c =&gt; !Payments.Any(payment =&gt; payment.patientId == c.patientId &amp;&amp;
+</span></span><span style="display:flex;"><span>            payment.paymentAmount == c.billAmount));  <span style="color:#75715e">// exists</span>
+</span></span><span style="display:flex;"><span>communicationsNoPayment.Select(c =&gt; commScore[c.medium] -= <span style="color:#ae81ff">0.2</span>);
 </span></span></code></pre></div><ul class="pa0">
   
 </ul>
