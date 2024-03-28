@@ -240,3 +240,5 @@ var communicationsNoPayment = Communications.Where(c => !Payments.Any(payment =>
             payment.paymentAmount == c.billAmount));  // exists
 communicationsNoPayment.Select(c => commScore[c.medium] -= 0.2);
 ```
+
+Linq also support a query syntax which is a custom SQL-like DSL in addition to the method syntax which we have explored in this post. Please visit [MSDN](https://learn.microsoft.com/en-us/dotnet/standard/linq/#language-level-query-syntax) for more information about Linq

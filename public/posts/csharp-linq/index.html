@@ -49,7 +49,7 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 GroupBy and Max
 Here we solve a very common SQL exercise to return the maximum salary earned in each department."><meta itemprop="datePublished" content="2024-03-28T15:51:33-07:00" />
 <meta itemprop="dateModified" content="2024-03-28T15:51:33-07:00" />
-<meta itemprop="wordCount" content="1246">
+<meta itemprop="wordCount" content="1279">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Csharp Linq"/>
 <meta name="twitter:description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
 GroupBy and Max
@@ -335,7 +335,8 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> communicationsNoPayment = Communications.Where(c =&gt; !Payments.Any(payment =&gt; payment.patientId == c.patientId &amp;&amp;
 </span></span><span style="display:flex;"><span>            payment.paymentAmount == c.billAmount));  <span style="color:#75715e">// exists</span>
 </span></span><span style="display:flex;"><span>communicationsNoPayment.Select(c =&gt; commScore[c.medium] -= <span style="color:#ae81ff">0.2</span>);
-</span></span></code></pre></div><ul class="pa0">
+</span></span></code></pre></div><p>Linq also support a query syntax which is a custom SQL-like DSL in addition to the method syntax which we have explored in this post. Please visit <a href="https://learn.microsoft.com/en-us/dotnet/standard/linq/#language-level-query-syntax">MSDN</a> for more information about Linq</p>
+<ul class="pa0">
   
 </ul>
 <div class="mt6 instapaper_ignoref">
