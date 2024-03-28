@@ -49,7 +49,7 @@ with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_d
 Active user retention link
 with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link"><meta itemprop="datePublished" content="2024-03-22T21:27:03-07:00" />
 <meta itemprop="dateModified" content="2024-03-22T21:27:03-07:00" />
-<meta itemprop="wordCount" content="693">
+<meta itemprop="wordCount" content="747">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Sql Interview Hard"/>
 <meta name="twitter:description" content="Questions
 Active user retention link
@@ -354,6 +354,22 @@ with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_d
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> (<span style="color:#66d9ef">sum</span>(delivered_incorrectly)::decimal<span style="color:#f92672">/</span><span style="color:#66d9ef">sum</span>(total)::decimal),<span style="color:#ae81ff">2</span>)
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">as</span> bad_experience_pct
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> OrdersDeliveredIncorrectly
+</span></span></code></pre></div><blockquote>
+<p>Follow-up Airpods percentage <a href="https://datalemur.com/questions/follow-up-airpod-percentage">link</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- use lag to look at the previous row
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">with</span> PrevProduct <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>  lag(product_name)
+</span></span><span style="display:flex;"><span>    over (partition <span style="color:#66d9ef">by</span> customer_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> 
+</span></span><span style="display:flex;"><span>      transaction_timestamp, product_name <span style="color:#66d9ef">desc</span>) <span style="color:#66d9ef">as</span> prev
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> transactions
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  round(<span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">*</span> (<span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) filter (<span style="color:#66d9ef">where</span> product_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AirPods&#39;</span> <span style="color:#66d9ef">and</span> prev <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;iPhone&#39;</span>)::decimal
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">/</span> <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">distinct</span> customer_id)::decimal)) <span style="color:#66d9ef">as</span> follow_up_percentage
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> PrevProduct
 </span></span></code></pre></div><ul class="pa0">
   
 </ul>

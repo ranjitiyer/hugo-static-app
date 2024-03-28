@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Csharp Linq | My New Hugo Site</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
+GroupBy and Max
+Here we solve a very common SQL exercise to return the maximum salary earned in each department.">
+    <meta name="generator" content="Hugo 0.123.8">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/csharp-linq/">
+    
+
+    <meta property="og:title" content="Csharp Linq" />
+<meta property="og:description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
+GroupBy and Max
+Here we solve a very common SQL exercise to return the maximum salary earned in each department." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.org/posts/csharp-linq/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-28T15:51:33-07:00" />
+<meta property="article:modified_time" content="2024-03-28T15:51:33-07:00" />
+
+<meta itemprop="name" content="Csharp Linq">
+<meta itemprop="description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
+GroupBy and Max
+Here we solve a very common SQL exercise to return the maximum salary earned in each department."><meta itemprop="datePublished" content="2024-03-28T15:51:33-07:00" />
+<meta itemprop="dateModified" content="2024-03-28T15:51:33-07:00" />
+<meta itemprop="wordCount" content="473">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Csharp Linq"/>
+<meta name="twitter:description" content="Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.
+GroupBy and Max
+Here we solve a very common SQL exercise to return the maximum salary earned in each department."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        My New Hugo Site
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Csharp Linq</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-03-28T15:51:33-07:00">March 28, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>Collections in C# support a functional style fluid API for manipulating collections and running aggregations over them. This is definitely one of the coolest features natively supported in C#. I&rsquo;ve had opportunities to use Linq at work and here are some example drills. Someone day, I&rsquo;d like to implement all the SQL challenges on DataLemur using C#.</p>
+<blockquote>
+<p>GroupBy and Max</p>
+</blockquote>
+<p>Here we solve a very common SQL exercise to return the maximum salary earned in each department. In it&rsquo;s most basic for <code>GroupBy</code> lets us specify a grouping key and gives us a tuple of with department record as the key and an enumerable of employee objects that map to it. We can then return an anonymous object with just the relevant pieces of information required for reporting the result.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Employee</span> (<span style="color:#66d9ef">int</span> empId, <span style="color:#66d9ef">string</span> department, <span style="color:#66d9ef">int</span> salary);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> MaxSalaryByDepartment()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Employee[] employees =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new(1, &#34;HR&#34;, 100),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new(2, &#34;HR&#34;, 200),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new(3, &#34;IT&#34;, 400),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new(4, &#34;IT&#34;, 9900),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    ]</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> keyValuePair <span style="color:#66d9ef">in</span> employees.GroupBy(e =&gt; e.department, (department, employees) =&gt;
+</span></span><span style="display:flex;"><span>                 {
+</span></span><span style="display:flex;"><span>                     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> { Department = department, MaxSalary = employees.Max(e =&gt; e.salary) };
+</span></span><span style="display:flex;"><span>                 }).ToDictionary(o =&gt; o.Department, o =&gt; o.MaxSalary))
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Console.WriteLine(<span style="color:#e6db74">$&#34;Max salary in department {keyValuePair.Key} &#34;</span> +
+</span></span><span style="display:flex;"><span>                          <span style="color:#e6db74">$&#34;is {keyValuePair.Value}&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>Left Join</p>
+</blockquote>
+<p>This examples demonstrates the need for a left-join achieved using the <code>GroupJoin</code> method on a collection. We&rsquo;re asked to report the percentage of shipments sent to a user&rsquo;s home address as opposed to elsewhere. Recognizing that a user may not have a shipment, we place <code>Users</code> on the left side of the join. Then we specify the outer and inner key to match rows on either side and expect to get an <code>null</code> list of transactions for users that haven&rsquo;t bought anything. This we handle with the null check and return 0. The result is a just a count of shipments sent to a home address for which we use the <code>Aggregate</code> function that takes a <code>seed</code> to set the  accumulator value of the lambda which is rolled up to a single number. This we divide by the total shipments to get our answer</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">record</span> <span style="color:#a6e22e">Transaction</span>(<span style="color:#66d9ef">int</span> txId, <span style="color:#66d9ef">int</span> userId, <span style="color:#66d9ef">string</span> shippedAddress);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">record</span> <span style="color:#a6e22e">User</span>(<span style="color:#66d9ef">int</span> userId, <span style="color:#66d9ef">string</span> address);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> PercentShippedToHomeAddress()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Transaction[] txs =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new Transaction(1, 1, &#34;Laguna Niguel&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new Transaction(2, 1, &#34;Irvine&#34;), // home address
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new Transaction(3, 2, &#34;Mumbai&#34;), // home address
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new Transaction(4, 3, &#34;LA&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new Transaction(5, 3, &#34;MN&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    ]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    User[] users =
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new User(1, &#34;Irvine&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new User(2, &#34;Mumbai&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new User(3, &#34;LA&#34;),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new User(4, &#34;SFO&#34;),  // user may not have any transactions
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">        new User(5, &#34;MN&#34;)  // user may not have any transactions
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    ]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> ordersShippedToHome = users.GroupJoin(txs,
+</span></span><span style="display:flex;"><span>        user =&gt; user.userId, <span style="color:#75715e">// outer key</span>
+</span></span><span style="display:flex;"><span>        tx =&gt; tx.userId,
+</span></span><span style="display:flex;"><span>        (user, listOfTransactions) =&gt;
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (listOfTransactions != <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> listOfTransactions.Count(tx =&gt; tx.shippedAddress.Equals(user.address));
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        }).Aggregate(<span style="color:#ae81ff">0</span>, (acc, sum) =&gt; acc + sum);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    Console.WriteLine(<span style="color:#e6db74">$&#34;Shipped to home {ordersShippedToHome}&#34;</span>);
+</span></span><span style="display:flex;"><span>    Console.WriteLine(ordersShippedToHome/(<span style="color:#66d9ef">double</span>) txs.Length);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ordersShippedToHome / txs.Length;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
+    &copy;  My New Hugo Site 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
