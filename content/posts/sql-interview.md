@@ -1,5 +1,5 @@
 +++
-title = 'Sql interview questions on DataLemur'
+title = 'Datalemur SQL interview questions (Easy)'
 date = 2024-03-11T11:32:50-07:00
 +++
 

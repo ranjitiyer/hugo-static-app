@@ -30,14 +30,14 @@
       <description>Time is a fundamental aspect of our perception. Time is a measure in which events can be ordered from the past through the present into the future, and also the measure of the duration of events and the intervals between them.&#xA;Time and Date are fundamntal types software engineers need to work with in programming langauges and software systems. In this post we&amp;rsquo;ll explore functions in Postgres SQL to work with date, time and durations.</description>
     </item>
     <item>
-      <title>SQL questions on DataLemur (medium)</title>
+      <title>Datalemur SQL interview questions (Medium)</title>
       <link>https://example.org/posts/sql-interview-medium/</link>
       <pubDate>Mon, 11 Mar 2024 11:59:43 -0700</pubDate>
       <guid>https://example.org/posts/sql-interview-medium/</guid>
       <description>Question&#xA;Users&amp;rsquo;s third transaction - link&#xA;SELECT user_id, spend, transaction_date from (select user_id, spend, transaction_date, rank() over (partition by user_id order by transaction_date) as rnk from transactions) as r where r.rnk = 3 Question&#xA;Sending vs opening snaps - link&#xA;SELECT age_bucket, round(100.0 * CAST(sum(case when activity_type = &amp;#39;send&amp;#39; then time_spent else 0 end) as decimal) / cast(sum(case when activity_type in (&amp;#39;send&amp;#39;,&amp;#39;open&amp;#39;) then time_spent else 0 end) as decimal),2) as send_perc, round(100.</description>
     </item>
     <item>
-      <title>Sql interview questions on DataLemur</title>
+      <title>Datalemur SQL interview questions (Easy)</title>
       <link>https://example.org/posts/sql-interview/</link>
       <pubDate>Mon, 11 Mar 2024 11:32:50 -0700</pubDate>
       <guid>https://example.org/posts/sql-interview/</guid>
