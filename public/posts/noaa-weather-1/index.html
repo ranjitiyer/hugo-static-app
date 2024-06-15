@@ -125,140 +125,140 @@ What makes this dataset interesting is that in addition to learning about weathe
     <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available <a href="https://www.ncdc.noaa.gov/cdo-web/datasets">here</a>, although we&rsquo;ll focus</p>
 <p>What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline. For example, although some datasets are CSV files, datasets containing metadata about stations, weather station inventory, etc. fixed column sizes and space separated files which need to be converted to CSV before loading to a relational database for analysis. Furthermore, weather station data is provided as lat/long coordinates and a weather station name. In the least we need to derive city, state and country names for human understandable reporting.</p>
 <p>We&rsquo;ll first work with <strong>Daily Summaries</strong> and start by looking at how NOAA <a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/">structures</a> the data files.</p>
-<pre tabindex="0"><code>root
-	/by_station
-	/by_year
-	/ghcnd-inventory.txt
-	/ghcnd-stations.txt
-	/ghcnd-countries.txt
-	. .
-</code></pre><p>Let&rsquo;s start with loading station metadata. The <a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt">readme</a> for this tells me rows in this file are space separated with fixed length columns, so we must first convert them to a CSV and use <code>|</code> as the separator since some of station names seem to have quotes in them which causes load to error. Additionally, we dropped columns that classifies a weather station using <code>pandas</code></p>
-<pre tabindex="0"><code>df = pd.read_csv()
-cols_to_keep = [0,1,2,3,..]
-df = df.iloc[:,cols_to_keep]
-df.write_csv(/path, index=False)
-</code></pre><p>Now we can focus on the CSV conversion. Here&rsquo;s a snippet from the <code>readme</code> that describes the schema of the file</p>
-<pre tabindex="0"><code># ------------------------------
-# Variable   Columns   Type
-# ------------------------------
-# ID            1-11   Character
-# LATITUDE     13-20   Real
-# LONGITUDE    22-30   Real
-. . . 
-</code></pre><p>And here&rsquo;s the python script to parse out the columns and write them out as a CSV</p>
-<pre tabindex="0"><code>lines=[]
-lines.append(&#39;id|lat|lon|elev|name&#39;)
-with open(&#39;/Users/ranjitiyer/work/data/weather/stations.txt&#39;, &#39;r&#39;) as st:
-    for line in st.readlines():
-        id = line[:11].strip()
-        lat = line[12:20].strip()
-        lon = line[21:30].strip()
-        elev = line[31:37].strip()
-        name = line[41:71].strip()
-        lines.append(f&#39;{id}|{lat}|{lon}|{elev}|{name}&#39;)
-        
-with open(&#39;/path/to/stations_formatted.txt&#39;,&#39;w&#39;) as st:
-    st.write(&#34;\n&#34;.join(lines))
-</code></pre><p>Now we can create a table and load into Postgres</p>
-<pre tabindex="0"><code>create table station
-(
-  id varchar(32),
-  lat decimal,
-  lon decimal,
-  elev decimal,
-  name varchar(128)
-);
-
-copy station
-from &#39;/path/to/stations_formatted.txt&#39;
-delimiter &#39;|&#39; CSV header
-</code></pre><pre tabindex="0"><code>select * from stations limit 2
-
-IN001020700	14.5830	77.6330	364.0	PBO ANANTAPUR
-IN001050200	16.9500	82.2330	8.0	KAKINADA
-</code></pre><p>Great, we have a process that can be applied to <code>country</code> and <code>inventory</code> and have all our metadata loaded. Here goes <code>inventory</code></p>
-<pre tabindex="0"><code>------------------------------
-Variable   Columns   Type
-------------------------------
-ID            1-11   Character
-LATITUDE     13-20   Real
-LONGITUDE    22-30   Real
-ELEMENT      32-35   Character
-FIRSTYEAR    37-40   Integer
-LASTYEAR     42-45   Integer
-------------------------------
-lines=[]
-lines.append(&#39;id|lat|lon|elem|firstyear|lastyear&#39;)
-with open(&#39;/Users/ranjitiyer/work/data/weather/inventory.txt&#39;, &#39;r&#39;) as st:
-    for line in st.readlines():
-        id = line[:11].strip()
-        lat = line[12:20].strip()
-        lon = line[21:30].strip()
-        elev = line[31:35].strip()
-        firstyear = line[37:40].strip()
-        lastyear = line[41:45].strip()
-        lines.append(f&#39;{id}|{lat}|{lon}|{elev}|{firstyear}|{lastyear}&#39;)
-        
-with open(&#39;/path/to/inventory_formatted.txt&#39;,&#39;w&#39;) as st:
-    st.write(&#34;\n&#34;.join(lines))
-</code></pre><pre tabindex="0"><code>create table inventory
-(
-  id varchar(32),
-  lat decimal,
-  lon decimal,
-  element varchar(32),
-  firstyear integer,
-  lastyear integer
-)
-
-copy inventory
-from &#39;/Users/ranjitiyer/work/data/weather/inventory_formatted.txt&#39;
-delimiter &#39;|&#39;
-CSV HEADER
-</code></pre><p>And <code>country</code> which I omitted writing about here. We finally have metadata loaded into Postgres.  Even with just metadata loaded, we can start asking some questions. It turns out weather stations have a lifespan and although <code>inventory</code> has many distinct stations many of them seem to be non-operational!</p>
-<pre tabindex="0"><code>-- total weather stations
-select count(distinct id) from inventory
-125976
-
--- weather stations active in 2024
-select count (distinct id) from inventory
-where lastyear = 2024
-34181
-</code></pre><p>This makes me ask what is the oldest operative weather stations in the world, which turns out to be a station in Australia!</p>
-<pre tabindex="0"><code>select distinct i.id, s.name, firstyear, lastyear, lastyear - firstyear as age
-from inventory i inner join station s on i.id = s.id
-where lastyear=2024
-order by age desc limit 1
-
-ASN00001019	KALUMBURU	1750	2024	274
-</code></pre><p>Wow, it&rsquo;s impressive but is it factual? <a href="https://en.wikipedia.org/wiki/Hohenpei%C3%9Fenberg_Meteorological_Observatory">Wikipedia</a> reports a weather station in Germany to be oldest, operating from 1751 and according to the <a href="http://www.bom.gov.au/climate/data/lists_by_element/stations.txt">Govt</a> of Australia <code>KALUMBURU</code> has been operative only since <code>1997</code> and yet looking at NOAA weather data from this station, we see reporting since March of 1750, so let&rsquo;s assume for now this is factual and move on.</p>
-<pre tabindex="0"><code>head ASN00001019.csv
-ASN00001019,17500301,TMAX,375,,,a,
-ASN00001019,17500302,TMAX,368,,,a,
-ASN00001019,17500303,TMAX,348,,,a,
-ASN00001019,17500304,TMAX,359,,,a,
-</code></pre><p>Now let&rsquo;s count the number of weather stations older than 100 years and still operative grouped by country. WStation IDs follow the convention where the first two letters are the Country code. Example <code>AEM00041194</code> is a weather station in the <code>UAE</code> and <code>AFM00040938</code> is one in Afghanistan. This query will require us to join the inventory table with country code to get the country name.</p>
-<pre tabindex="0"><code>select c.name,
-       count(*)
-       from 
-       (
-			select distinct id from inventory
-			where lastyear-firstyear &gt;= 100
-            and lastyear = 2024
-        ) as a
-       inner join Country c on c.code = substring(id,1,2)
-       group by c.name
-       order by count(*) desc
-
-United States 	1911
-Russia 			94
-India 			80
-Germany 		71
-Australia 		66
-Norway 			59
-Sweden 			42       
-. . .
-</code></pre><p>That&rsquo;s it for this post. More fun exploration in the next post. Stay tuned!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>root
+</span></span><span style="display:flex;"><span>	/by_station
+</span></span><span style="display:flex;"><span>	/by_year
+</span></span><span style="display:flex;"><span>	/ghcnd-inventory.txt
+</span></span><span style="display:flex;"><span>	/ghcnd-stations.txt
+</span></span><span style="display:flex;"><span>	/ghcnd-countries.txt
+</span></span><span style="display:flex;"><span>	. .
+</span></span></code></pre></div><p>Let&rsquo;s start with loading station metadata. The <a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt">readme</a> for this tells me rows in this file are space separated with fixed length columns, so we must first convert them to a CSV and use <code>|</code> as the separator since some of station names seem to have quotes in them which causes load to error. Additionally, we dropped columns that classifies a weather station using <code>pandas</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv()
+</span></span><span style="display:flex;"><span>cols_to_keep <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#f92672">..</span>]
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>iloc[:,cols_to_keep]
+</span></span><span style="display:flex;"><span>df<span style="color:#f92672">.</span>write_csv(<span style="color:#f92672">/</span>path, index<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div><p>Now we can focus on the CSV conversion. Here&rsquo;s a snippet from the <code>readme</code> that describes the schema of the file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># ------------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Variable   Columns   Type</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ------------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ID            1-11   Character</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># LATITUDE     13-20   Real</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># LONGITUDE    22-30   Real</span>
+</span></span><span style="display:flex;"><span>. . . 
+</span></span></code></pre></div><p>And here&rsquo;s the python script to parse out the columns and write them out as a CSV</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>lines<span style="color:#f92672">=</span>[]
+</span></span><span style="display:flex;"><span>lines<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#39;id|lat|lon|elev|name&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;/Users/ranjitiyer/work/data/weather/stations.txt&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>) <span style="color:#66d9ef">as</span> st:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> st<span style="color:#f92672">.</span>readlines():
+</span></span><span style="display:flex;"><span>        id <span style="color:#f92672">=</span> line[:<span style="color:#ae81ff">11</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lat <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">12</span>:<span style="color:#ae81ff">20</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lon <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">21</span>:<span style="color:#ae81ff">30</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        elev <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">31</span>:<span style="color:#ae81ff">37</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        name <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">41</span>:<span style="color:#ae81ff">71</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lines<span style="color:#f92672">.</span>append(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>id<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>lat<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>lon<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>elev<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;/path/to/stations_formatted.txt&#39;</span>,<span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> st:
+</span></span><span style="display:flex;"><span>    st<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>join(lines))
+</span></span></code></pre></div><p>Now we can create a table and load into Postgres</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> station
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  id varchar(<span style="color:#ae81ff">32</span>),
+</span></span><span style="display:flex;"><span>  lat decimal,
+</span></span><span style="display:flex;"><span>  lon decimal,
+</span></span><span style="display:flex;"><span>  elev decimal,
+</span></span><span style="display:flex;"><span>  name varchar(<span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> station
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/path/to/stations_formatted.txt&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">delimiter</span> <span style="color:#e6db74">&#39;|&#39;</span> CSV header
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> stations <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IN001020700	<span style="color:#ae81ff">14</span>.<span style="color:#ae81ff">5830</span>	<span style="color:#ae81ff">77</span>.<span style="color:#ae81ff">6330</span>	<span style="color:#ae81ff">364</span>.<span style="color:#ae81ff">0</span>	PBO ANANTAPUR
+</span></span><span style="display:flex;"><span>IN001050200	<span style="color:#ae81ff">16</span>.<span style="color:#ae81ff">9500</span>	<span style="color:#ae81ff">82</span>.<span style="color:#ae81ff">2330</span>	<span style="color:#ae81ff">8</span>.<span style="color:#ae81ff">0</span>	KAKINADA
+</span></span></code></pre></div><p>Great, we have a process that can be applied to <code>country</code> and <code>inventory</code> and have all our metadata loaded. Here goes <code>inventory</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">------------------------------</span>
+</span></span><span style="display:flex;"><span>Variable   Columns   Type
+</span></span><span style="display:flex;"><span><span style="color:#f92672">------------------------------</span>
+</span></span><span style="display:flex;"><span>ID            <span style="color:#ae81ff">1</span><span style="color:#f92672">-</span><span style="color:#ae81ff">11</span>   Character
+</span></span><span style="display:flex;"><span>LATITUDE     <span style="color:#ae81ff">13</span><span style="color:#f92672">-</span><span style="color:#ae81ff">20</span>   Real
+</span></span><span style="display:flex;"><span>LONGITUDE    <span style="color:#ae81ff">22</span><span style="color:#f92672">-</span><span style="color:#ae81ff">30</span>   Real
+</span></span><span style="display:flex;"><span>ELEMENT      <span style="color:#ae81ff">32</span><span style="color:#f92672">-</span><span style="color:#ae81ff">35</span>   Character
+</span></span><span style="display:flex;"><span>FIRSTYEAR    <span style="color:#ae81ff">37</span><span style="color:#f92672">-</span><span style="color:#ae81ff">40</span>   Integer
+</span></span><span style="display:flex;"><span>LASTYEAR     <span style="color:#ae81ff">42</span><span style="color:#f92672">-</span><span style="color:#ae81ff">45</span>   Integer
+</span></span><span style="display:flex;"><span><span style="color:#f92672">------------------------------</span>
+</span></span><span style="display:flex;"><span>lines<span style="color:#f92672">=</span>[]
+</span></span><span style="display:flex;"><span>lines<span style="color:#f92672">.</span>append(<span style="color:#e6db74">&#39;id|lat|lon|elem|firstyear|lastyear&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;/Users/ranjitiyer/work/data/weather/inventory.txt&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>) <span style="color:#66d9ef">as</span> st:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> st<span style="color:#f92672">.</span>readlines():
+</span></span><span style="display:flex;"><span>        id <span style="color:#f92672">=</span> line[:<span style="color:#ae81ff">11</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lat <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">12</span>:<span style="color:#ae81ff">20</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lon <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">21</span>:<span style="color:#ae81ff">30</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        elev <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">31</span>:<span style="color:#ae81ff">35</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        firstyear <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">37</span>:<span style="color:#ae81ff">40</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lastyear <span style="color:#f92672">=</span> line[<span style="color:#ae81ff">41</span>:<span style="color:#ae81ff">45</span>]<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        lines<span style="color:#f92672">.</span>append(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>id<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>lat<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>lon<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>elev<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>firstyear<span style="color:#e6db74">}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{</span>lastyear<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;/path/to/inventory_formatted.txt&#39;</span>,<span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> st:
+</span></span><span style="display:flex;"><span>    st<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>join(lines))
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> inventory
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  id varchar(<span style="color:#ae81ff">32</span>),
+</span></span><span style="display:flex;"><span>  lat decimal,
+</span></span><span style="display:flex;"><span>  lon decimal,
+</span></span><span style="display:flex;"><span>  element varchar(<span style="color:#ae81ff">32</span>),
+</span></span><span style="display:flex;"><span>  firstyear integer,
+</span></span><span style="display:flex;"><span>  lastyear integer
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> inventory
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/data/weather/inventory_formatted.txt&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">delimiter</span> <span style="color:#e6db74">&#39;|&#39;</span>
+</span></span><span style="display:flex;"><span>CSV HEADER
+</span></span></code></pre></div><p>And <code>country</code> which I omitted writing about here. We finally have metadata loaded into Postgres.  Even with just metadata loaded, we can start asking some questions. It turns out weather stations have a lifespan and although <code>inventory</code> has many distinct stations many of them seem to be non-operational!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- total weather stations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">distinct</span> id) <span style="color:#66d9ef">from</span> inventory
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">125976</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- weather stations active in 2024
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span> (<span style="color:#66d9ef">distinct</span> id) <span style="color:#66d9ef">from</span> inventory
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> lastyear <span style="color:#f92672">=</span> <span style="color:#ae81ff">2024</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">34181</span>
+</span></span></code></pre></div><p>This makes me ask what is the oldest operative weather stations in the world, which turns out to be a station in Australia!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> i.id, s.name, firstyear, lastyear, lastyear <span style="color:#f92672">-</span> firstyear <span style="color:#66d9ef">as</span> age
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> inventory i <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> station s <span style="color:#66d9ef">on</span> i.id <span style="color:#f92672">=</span> s.id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> lastyear<span style="color:#f92672">=</span><span style="color:#ae81ff">2024</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> age <span style="color:#66d9ef">desc</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ASN00001019	KALUMBURU	<span style="color:#ae81ff">1750</span>	<span style="color:#ae81ff">2024</span>	<span style="color:#ae81ff">274</span>
+</span></span></code></pre></div><p>Wow, it&rsquo;s impressive but is it factual? <a href="https://en.wikipedia.org/wiki/Hohenpei%C3%9Fenberg_Meteorological_Observatory">Wikipedia</a> reports a weather station in Germany to be oldest, operating from 1751 and according to the <a href="http://www.bom.gov.au/climate/data/lists_by_element/stations.txt">Govt</a> of Australia <code>KALUMBURU</code> has been operative only since <code>1997</code> and yet looking at NOAA weather data from this station, we see reporting since March of 1750, so let&rsquo;s assume for now this is factual and move on.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>head ASN00001019.csv
+</span></span><span style="display:flex;"><span>ASN00001019,17500301,TMAX,375,,,a,
+</span></span><span style="display:flex;"><span>ASN00001019,17500302,TMAX,368,,,a,
+</span></span><span style="display:flex;"><span>ASN00001019,17500303,TMAX,348,,,a,
+</span></span><span style="display:flex;"><span>ASN00001019,17500304,TMAX,359,,,a,
+</span></span></code></pre></div><p>Now let&rsquo;s count the number of weather stations older than 100 years and still operative grouped by country. WStation IDs follow the convention where the first two letters are the Country code. Example <code>AEM00041194</code> is a weather station in the <code>UAE</code> and <code>AFM00040938</code> is one in Afghanistan. This query will require us to join the inventory table with country code to get the country name.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">c</span>.name,
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>)
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">from</span> 
+</span></span><span style="display:flex;"><span>       (
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> id <span style="color:#66d9ef">from</span> inventory
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">where</span> lastyear<span style="color:#f92672">-</span>firstyear <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">and</span> lastyear <span style="color:#f92672">=</span> <span style="color:#ae81ff">2024</span>
+</span></span><span style="display:flex;"><span>        ) <span style="color:#66d9ef">as</span> a
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> Country <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> <span style="color:#66d9ef">c</span>.code <span style="color:#f92672">=</span> <span style="color:#66d9ef">substring</span>(id,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">c</span>.name
+</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">desc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>United States 	<span style="color:#ae81ff">1911</span>
+</span></span><span style="display:flex;"><span>Russia 			<span style="color:#ae81ff">94</span>
+</span></span><span style="display:flex;"><span>India 			<span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>Germany 		<span style="color:#ae81ff">71</span>
+</span></span><span style="display:flex;"><span>Australia 		<span style="color:#ae81ff">66</span>
+</span></span><span style="display:flex;"><span>Norway 			<span style="color:#ae81ff">59</span>
+</span></span><span style="display:flex;"><span>Sweden 			<span style="color:#ae81ff">42</span>       
+</span></span><span style="display:flex;"><span>. . .
+</span></span></code></pre></div><p>That&rsquo;s it for this post. More fun exploration in the next post. Stay tuned!</p>
 <ul class="pa0">
   
 </ul>
