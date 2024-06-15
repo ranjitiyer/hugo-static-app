@@ -6,8 +6,15 @@
     <description>Recent content on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Mar 2024 15:51:33 -0700</lastBuildDate>
+    <lastBuildDate>Sat, 15 Jun 2024 11:55:15 -0700</lastBuildDate>
     <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Noaa Weather 1</title>
+      <link>https://example.org/posts/noaa-weather-1/</link>
+      <pubDate>Sat, 15 Jun 2024 11:55:15 -0700</pubDate>
+      <guid>https://example.org/posts/noaa-weather-1/</guid>
+      <description>In this next series of posts, we&amp;rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available here, although we&amp;rsquo;ll focus&#xA;What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline.</description>
+    </item>
     <item>
       <title>Csharp Linq</title>
       <link>https://example.org/posts/csharp-linq/</link>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Noaa Weather 1 | My New Hugo Site</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available here, although we&rsquo;ll focus
+What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline.">
+    <meta name="generator" content="Hugo 0.123.8">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/noaa-weather-1/">
+    
+
+    <meta property="og:title" content="Noaa Weather 1" />
+<meta property="og:description" content="In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available here, although we&rsquo;ll focus
+What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.org/posts/noaa-weather-1/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-06-15T11:55:15-07:00" />
+<meta property="article:modified_time" content="2024-06-15T11:55:15-07:00" />
+
+<meta itemprop="name" content="Noaa Weather 1">
+<meta itemprop="description" content="In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available here, although we&rsquo;ll focus
+What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline."><meta itemprop="datePublished" content="2024-06-15T11:55:15-07:00" />
+<meta itemprop="dateModified" content="2024-06-15T11:55:15-07:00" />
+<meta itemprop="wordCount" content="844">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Noaa Weather 1"/>
+<meta name="twitter:description" content="In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available here, although we&rsquo;ll focus
+What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        My New Hugo Site
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Noaa Weather 1</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-06-15T11:55:15-07:00">June 15, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>In this next series of posts, we&rsquo;ll look at how to work with NOAA weather data. NOAA provides weather data received from thousands of weather stations across the world. NOAA structures this data and makes them available in a few different ways. The full list of data sets (some of which are specific to the US) are available <a href="https://www.ncdc.noaa.gov/cdo-web/datasets">here</a>, although we&rsquo;ll focus</p>
+<p>What makes this dataset interesting is that in addition to learning about weather trends, it also entails working through several classical stages in setting up a data processing pipeline. For example, although some datasets are CSV files, datasets containing metadata about stations, weather station inventory, etc. fixed column sizes and space separated files which need to be converted to CSV before loading to a relational database for analysis. Furthermore, weather station data is provided as lat/long coordinates and a weather station name. In the least we need to derive city, state and country names for human understandable reporting.</p>
+<p>We&rsquo;ll first work with <strong>Daily Summaries</strong> and start by looking at how NOAA <a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/">structures</a> the data files.</p>
+<pre tabindex="0"><code>root
+	/by_station
+	/by_year
+	/ghcnd-inventory.txt
+	/ghcnd-stations.txt
+	/ghcnd-countries.txt
+	. .
+</code></pre><p>Let&rsquo;s start with loading station metadata. The <a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt">readme</a> for this tells me rows in this file are space separated with fixed length columns, so we must first convert them to a CSV and use <code>|</code> as the separator since some of station names seem to have quotes in them which causes load to error. Additionally, we dropped columns that classifies a weather station using <code>pandas</code></p>
+<pre tabindex="0"><code>df = pd.read_csv()
+cols_to_keep = [0,1,2,3,..]
+df = df.iloc[:,cols_to_keep]
+df.write_csv(/path, index=False)
+</code></pre><p>Now we can focus on the CSV conversion. Here&rsquo;s a snippet from the <code>readme</code> that describes the schema of the file</p>
+<pre tabindex="0"><code># ------------------------------
+# Variable   Columns   Type
+# ------------------------------
+# ID            1-11   Character
+# LATITUDE     13-20   Real
+# LONGITUDE    22-30   Real
+. . . 
+</code></pre><p>And here&rsquo;s the python script to parse out the columns and write them out as a CSV</p>
+<pre tabindex="0"><code>lines=[]
+lines.append(&#39;id|lat|lon|elev|name&#39;)
+with open(&#39;/Users/ranjitiyer/work/data/weather/stations.txt&#39;, &#39;r&#39;) as st:
+    for line in st.readlines():
+        id = line[:11].strip()
+        lat = line[12:20].strip()
+        lon = line[21:30].strip()
+        elev = line[31:37].strip()
+        name = line[41:71].strip()
+        lines.append(f&#39;{id}|{lat}|{lon}|{elev}|{name}&#39;)
+        
+with open(&#39;/path/to/stations_formatted.txt&#39;,&#39;w&#39;) as st:
+    st.write(&#34;\n&#34;.join(lines))
+</code></pre><p>Now we can create a table and load into Postgres</p>
+<pre tabindex="0"><code>create table station
+(
+  id varchar(32),
+  lat decimal,
+  lon decimal,
+  elev decimal,
+  name varchar(128)
+);
+
+copy station
+from &#39;/path/to/stations_formatted.txt&#39;
+delimiter &#39;|&#39; CSV header
+</code></pre><pre tabindex="0"><code>select * from stations limit 2
+
+IN001020700	14.5830	77.6330	364.0	PBO ANANTAPUR
+IN001050200	16.9500	82.2330	8.0	KAKINADA
+</code></pre><p>Great, we have a process that can be applied to <code>country</code> and <code>inventory</code> and have all our metadata loaded. Here goes <code>inventory</code></p>
+<pre tabindex="0"><code>------------------------------
+Variable   Columns   Type
+------------------------------
+ID            1-11   Character
+LATITUDE     13-20   Real
+LONGITUDE    22-30   Real
+ELEMENT      32-35   Character
+FIRSTYEAR    37-40   Integer
+LASTYEAR     42-45   Integer
+------------------------------
+lines=[]
+lines.append(&#39;id|lat|lon|elem|firstyear|lastyear&#39;)
+with open(&#39;/Users/ranjitiyer/work/data/weather/inventory.txt&#39;, &#39;r&#39;) as st:
+    for line in st.readlines():
+        id = line[:11].strip()
+        lat = line[12:20].strip()
+        lon = line[21:30].strip()
+        elev = line[31:35].strip()
+        firstyear = line[37:40].strip()
+        lastyear = line[41:45].strip()
+        lines.append(f&#39;{id}|{lat}|{lon}|{elev}|{firstyear}|{lastyear}&#39;)
+        
+with open(&#39;/path/to/inventory_formatted.txt&#39;,&#39;w&#39;) as st:
+    st.write(&#34;\n&#34;.join(lines))
+</code></pre><pre tabindex="0"><code>create table inventory
+(
+  id varchar(32),
+  lat decimal,
+  lon decimal,
+  element varchar(32),
+  firstyear integer,
+  lastyear integer
+)
+
+copy inventory
+from &#39;/Users/ranjitiyer/work/data/weather/inventory_formatted.txt&#39;
+delimiter &#39;|&#39;
+CSV HEADER
+</code></pre><p>And <code>country</code> which I omitted writing about here. We finally have metadata loaded into Postgres.  Even with just metadata loaded, we can start asking some questions. It turns out weather stations have a lifespan and although <code>inventory</code> has many distinct stations many of them seem to be non-operational!</p>
+<pre tabindex="0"><code>-- total weather stations
+select count(distinct id) from inventory
+125976
+
+-- weather stations active in 2024
+select count (distinct id) from inventory
+where lastyear = 2024
+34181
+</code></pre><p>This makes me ask what is the oldest operative weather stations in the world, which turns out to be a station in Australia!</p>
+<pre tabindex="0"><code>select distinct i.id, s.name, firstyear, lastyear, lastyear - firstyear as age
+from inventory i inner join station s on i.id = s.id
+where lastyear=2024
+order by age desc limit 1
+
+ASN00001019	KALUMBURU	1750	2024	274
+</code></pre><p>Wow, it&rsquo;s impressive but is it factual? <a href="https://en.wikipedia.org/wiki/Hohenpei%C3%9Fenberg_Meteorological_Observatory">Wikipedia</a> reports a weather station in Germany to be oldest, operating from 1751 and according to the <a href="http://www.bom.gov.au/climate/data/lists_by_element/stations.txt">Govt</a> of Australia <code>KALUMBURU</code> has been operative only since <code>1997</code> and yet looking at NOAA weather data from this station, we see reporting since March of 1750, so let&rsquo;s assume for now this is factual and move on.</p>
+<pre tabindex="0"><code>head ASN00001019.csv
+ASN00001019,17500301,TMAX,375,,,a,
+ASN00001019,17500302,TMAX,368,,,a,
+ASN00001019,17500303,TMAX,348,,,a,
+ASN00001019,17500304,TMAX,359,,,a,
+</code></pre><p>Now let&rsquo;s count the number of weather stations older than 100 years and still operative grouped by country. WStation IDs follow the convention where the first two letters are the Country code. Example <code>AEM00041194</code> is a weather station in the <code>UAE</code> and <code>AFM00040938</code> is one in Afghanistan. This query will require us to join the inventory table with country code to get the country name.</p>
+<pre tabindex="0"><code>select c.name,
+       count(*)
+       from 
+       (
+			select distinct id from inventory
+			where lastyear-firstyear &gt;= 100
+            and lastyear = 2024
+        ) as a
+       inner join Country c on c.code = substring(id,1,2)
+       group by c.name
+       order by count(*) desc
+
+United States 	1911
+Russia 			94
+India 			80
+Germany 		71
+Australia 		66
+Norway 			59
+Sweden 			42       
+. . .
+</code></pre><p>That&rsquo;s it for this post. More fun exploration in the next post. Stay tuned!</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
+    &copy;  My New Hugo Site 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
