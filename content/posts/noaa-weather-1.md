@@ -181,4 +181,4 @@ Sweden 			42
 . . .
 ```
 
-That's it for this post. More fun exploration in the next post. Stay tuned!
+These results are believable, if a country's population and size are taken into account. That's it for this post. More fun exploration in the next post. Stay tuned!
