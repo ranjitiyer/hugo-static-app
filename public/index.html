@@ -122,6 +122,34 @@
       
       <div class="blah w-100">
         <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/posts/noaa-weather-2/" class="color-inherit dim link">
+            Noaa Weather 2
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
+Question 1
+Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Detour
+NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations).
+        </div>
+          <a href="/posts/noaa-weather-2/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+        
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+          <div class="relative w-100 mb4">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
+    <div class="flex flex-column flex-row-ns">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
           <a href="/posts/noaa-weather-1/" class="color-inherit dim link">
             Noaa Weather 1
             </a>
@@ -165,38 +193,18 @@ Here we solve a very common SQL exercise to return the maximum salary earned in 
 
           </div>
         
-          <div class="relative w-100 mb4">
-            
-<article class="bb b--black-10">
-  <div class="db pv4 ph3 ph0-l no-underline dark-gray">
-    <div class="flex flex-column flex-row-ns">
-      
-      <div class="blah w-100">
-        <h1 class="f3 fw1 athelas mt0 lh-title">
-          <a href="/posts/sql-interview-hard/" class="color-inherit dim link">
-            Sql Interview Hard
-            </a>
-        </h1>
-        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          Questions
-Active user retention link
-with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_date) as Month, max(case when event_type in (&#39;sign-in&#39;, &#39;like&#39;, &#39;comment&#39;) then 1 else 0 end) over (partition by user_id, date_part(&#39;month&#39;, event_date)) as IsActive from user_actions where date_part(&#39;month&#39;, event_date) in (&#39;06&#39;,&#39;07&#39;)), SideBySide as (select user_id, Month, lag(Month) over (partition by user_id order by Month) as PrevMonth from ActiveUsers) select Month, count(*) from SideBySide where Month = 7 and PrevMonth is not null group by Month Active User growth link
-        </div>
-          <a href="/posts/sql-interview-hard/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
-        
-      </div>
-    </div>
-  </div>
-</article>
-
-          </div>
-        
       </section>
 
       
       <section class="w-100">
         <h1 class="f3">More</h1>
         
+        
+          <h2 class="f5 fw4 mb4 dib mr3">
+            <a href="/posts/sql-interview-hard/" class="link black dim">
+              Sql Interview Hard
+            </a>
+          </h2>
         
           <h2 class="f5 fw4 mb4 dib mr3">
             <a href="/posts/dates-postgres/" class="link black dim">
@@ -213,12 +221,6 @@ with ActiveUsers as (select distinct user_id, date_part(&#39;month&#39;, event_d
           <h2 class="f5 fw4 mb4 dib mr3">
             <a href="/posts/sql-interview/" class="link black dim">
               Datalemur SQL interview questions (Easy)
-            </a>
-          </h2>
-        
-          <h2 class="f5 fw4 mb4 dib mr3">
-            <a href="/posts/second-post/" class="link black dim">
-              Braintree SQL coding challenge
             </a>
           </h2>
         

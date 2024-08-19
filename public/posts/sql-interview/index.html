@@ -55,7 +55,7 @@ Example Output: tweet_bucket	users_num 1	2 2	1 with tweets_per_user as ( select 
 Rolling average tweets - link
 Example Output: user_id	tweet_date	rolling_avg_3d 111	06/01/2022 00:00:00	2.00 111	06/02/2022 00:00:00	1.50 111	06/03/2022 00:00:00	2.00 111	06/04/2022 00:00:00	2."><meta itemprop="datePublished" content="2024-03-11T11:32:50-07:00" />
 <meta itemprop="dateModified" content="2024-03-11T11:32:50-07:00" />
-<meta itemprop="wordCount" content="1145">
+<meta itemprop="wordCount" content="1277">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Datalemur SQL interview questions (Easy)"/>
 <meta name="twitter:description" content="Question
 Histogram of tweets - link
@@ -267,6 +267,47 @@ user_id	session_type	ranking
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> posts
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> user_id <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> user_id <span style="color:#66d9ef">from</span> Gt2PostsIn2021)
 </span></span><span style="display:flex;"><span>  
+</span></span></code></pre></div><p>And an overly complicated version - on a day when I forgot about <code>min</code> and <code>max</code> :)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> UsersIn2021 <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> num_posts
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> posts
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> date_part(<span style="color:#e6db74">&#39;year&#39;</span>, post_date) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2021</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> user_id
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>RankedPosts <span style="color:#66d9ef">AS</span>
+</span></span><span style="display:flex;"><span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    user_id,
+</span></span><span style="display:flex;"><span>    post_date,
+</span></span><span style="display:flex;"><span>    rank() over (partition <span style="color:#66d9ef">by</span> user_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> post_date) asc_rnk,
+</span></span><span style="display:flex;"><span>    rank() over (partition <span style="color:#66d9ef">by</span> user_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> post_date <span style="color:#66d9ef">desc</span>) desc_rnk
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> posts
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> user_id <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> user_id <span style="color:#66d9ef">from</span> UsersIn2021)
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>FirstAndLast <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  post_date
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> RankedPosts <span style="color:#66d9ef">where</span> asc_rnk <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">UNION</span> <span style="color:#66d9ef">ALL</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">select</span> user_id,
+</span></span><span style="display:flex;"><span>  post_date
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> RankedPosts <span style="color:#66d9ef">where</span> desc_rnk <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>Hiatus <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>  user_id,
+</span></span><span style="display:flex;"><span>  lead(post_date) over (partition <span style="color:#66d9ef">by</span> user_id <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> post_date) <span style="color:#f92672">-</span> post_date 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">as</span> days_between
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> FirstAndLast
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> user_id,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">extract</span>(days <span style="color:#66d9ef">from</span> days_between::interval) <span style="color:#66d9ef">as</span> days_between
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">from</span> Hiatus
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> days_between <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>
 </span></span></code></pre></div><p><strong>Question</strong></p>
 <blockquote>
 <p>Teams power users - <a href="https://datalemur.com/questions/teams-power-users">link</a></p>

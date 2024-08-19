@@ -1,5 +1,101 @@
 +++
 title = 'Noaa Weather 2'
 date = 2024-06-15T14:59:49-07:00
-draft = true
 +++
+
+In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we'll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
+
+Question 1
+
+Given a city, show me weather trends in the last 10 years - temperature and precipitation
+
+Detour
+
+NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations). A lay user however will expect their exploration to start with a city or state. So we have two options - reverse geocode all the lat/lon locations apriori or given a city or state, find K nearest weather stations and pick a weather station. Let's go with the first option for now and limit ourselves to only weather stations in India.
+
+I'm going to use ArcGIS Online's reverse geocoding service to obtain location information with a lat/lon pair and here's the python script snippet I used
+
+```python
+import requests
+def reverse_geocode(lat, lon) -> Location:
+    try:
+        url = f'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&token=<token>&location={lon},{lat}'
+        print(f'{lon},{lat}')
+        resp = requests.get(url)
+        json = resp.json()
+        city=json['address']['City']
+        county=json['address']['Subregion']
+        state=json['address']['Region']
+        country_name=json['address']['CntryName']
+        country=json['address']['CountryCode']
+        print(f'{city}')
+        return Location(city=city,county=county,state=state,country_name=country_name,country=country)
+    except Exception as e:
+        print(e)
+        return None
+```
+
+And load it into the our stations table by first staging the new cols in a temp table then updating station with the new rows
+
+```sql
+alter table station add column city varchar(128);
+alter table station add column state varchar(128);
+alter table station add column county varchar(128);
+alter table station add column country varchar(128);
+alter table station add column country_code varchar(3);
+
+copy temporary(lat,lon,city,county,state,country,country_code)
+from '/Users/ranjitiyer/work/data/weather/processed/inventory_stations_in_active_formatted.txt'
+delimiter ','
+CSV HEADER
+
+update station
+set city = t.city,
+    county = t.county,
+    state = t.state,
+    country = t.country,
+    country_code = t.country_code
+   from temporary t where station.lat = t.lat and station.lon = t.lon
+```
+
+![stations](/images/noaa/stations_with_city_names.png)
+
+Now we can present aggregates starting at the state level. 
+
+Let's calculate daily precipitation in the state of Maharashtra in July 2024
+```sql
+select 
+        distinct
+        'Maharashtra' as state,
+        measuredon,
+        round((sum(val) over (partition by state, measuredon)::decimal / 10::decimal) / 25::decimal,2) as rain_in_inches
+        from daily_2024 daily inner join station s on 
+        daily.station = s.id and s.state = 'Maharashtra'
+        and date_part('month', measuredon) = 07
+where measure = 'PRCP'
+and station like 'IN%'
+```
+![results](/images/noaa/mah_daily_2024_july.png)
+
+We'll now export these result to a CSV file and render it as a bar graph for which we'll use pandas and configuring matplotlib to work in interactive mode
+
+```python
+>>> import pandas as pd
+>>> df = pd.read_csv('plots/mah_2024_july_rains.csv')
+>>> df.head()
+         state  measuredon  rain_in_inches
+0  Maharashtra  2024-07-01            7.56
+1  Maharashtra  2024-07-02            8.08
+2  Maharashtra  2024-07-03            3.89
+3  Maharashtra  2024-07-04            4.08
+>>> import matplotlib.pyplot as plt
+>>> plt.ion()
+>>> df.plot(kind='bar', x='measuredon', y='rain_in_inches', legend=True)
+```
+![plot](/images/noaa/mah_daily_2024_july_plt.png)
+
+Let's now measure rainfall accumulation to find weeks of days of heavy rains
+
+
+
+

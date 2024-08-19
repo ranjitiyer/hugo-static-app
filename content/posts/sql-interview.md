@@ -170,6 +170,51 @@ SELECT
   
 ```
 
+And an overly complicated version - on a day when I forgot about `min` and `max` :)
+
+```sql
+with UsersIn2021 as
+(
+  select user_id,
+  count(*) as num_posts
+  from posts
+  where date_part('year', post_date) = 2021
+  group by user_id
+  having count(*) >= 2
+),
+RankedPosts AS
+(
+  select
+    user_id,
+    post_date,
+    rank() over (partition by user_id order by post_date) asc_rnk,
+    rank() over (partition by user_id order by post_date desc) desc_rnk
+  from posts
+  where user_id in (select user_id from UsersIn2021)
+),
+FirstAndLast as
+(select
+  user_id,
+  post_date
+  from RankedPosts where asc_rnk = 1
+UNION ALL
+  select user_id,
+  post_date
+  from RankedPosts where desc_rnk = 1
+),
+Hiatus as
+(select 
+  user_id,
+  lead(post_date) over (partition by user_id order by post_date) - post_date 
+    as days_between
+  from FirstAndLast
+)
+select user_id,
+  extract(days from days_between::interval) as days_between
+  from Hiatus
+where days_between is not null
+```
+
 **Question** 
 
 > Teams power users - [link](https://datalemur.com/questions/teams-power-users)
