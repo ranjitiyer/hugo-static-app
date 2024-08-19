@@ -13,7 +13,7 @@
       <link>https://example.org/posts/noaa-weather-2/</link>
       <pubDate>Sat, 15 Jun 2024 14:59:49 -0700</pubDate>
       <guid>https://example.org/posts/noaa-weather-2/</guid>
-      <description>In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&amp;rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.&#xA;Question 1&#xA;Given a city, show me weather trends in the last 10 years - temperature and precipitation&#xA;Detour&#xA;NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations).</description>
+      <description>In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&amp;rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.&#xA;Question 1&#xA;Given a state, show me weather trends in the last 10 years - temperature and precipitation&#xA;Detour&#xA;NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations).</description>
     </item>
     <item>
       <title>Noaa Weather 1</title>

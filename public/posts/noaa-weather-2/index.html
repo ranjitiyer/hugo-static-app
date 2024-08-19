@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 Question 1
-Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Given a state, show me weather trends in the last 10 years - temperature and precipitation
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations).">
     <meta name="generator" content="Hugo 0.123.8">
@@ -40,7 +40,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
     <meta property="og:title" content="Noaa Weather 2" />
 <meta property="og:description" content="In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 Question 1
-Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Given a state, show me weather trends in the last 10 years - temperature and precipitation
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations)." />
 <meta property="og:type" content="article" />
@@ -51,15 +51,15 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
 <meta itemprop="name" content="Noaa Weather 2">
 <meta itemprop="description" content="In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 Question 1
-Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Given a state, show me weather trends in the last 10 years - temperature and precipitation
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations)."><meta itemprop="datePublished" content="2024-06-15T14:59:49-07:00" />
 <meta itemprop="dateModified" content="2024-06-15T14:59:49-07:00" />
-<meta itemprop="wordCount" content="454">
+<meta itemprop="wordCount" content="456">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Noaa Weather 2"/>
 <meta name="twitter:description" content="In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 Question 1
-Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Given a state, show me weather trends in the last 10 years - temperature and precipitation
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations)."/>
 
@@ -135,10 +135,10 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
       
     </header>
     <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.</p>
-<p>Question 1</p>
-<p>Given a city, show me weather trends in the last 10 years - temperature and precipitation</p>
+<p><em><strong>Question 1</strong></em></p>
+<p>Given a state, show me weather trends in the last 10 years - temperature and precipitation</p>
 <p>Detour</p>
-<p>NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations). A lay user however will expect their exploration to start with a city or state. So we have two options - reverse geocode all the lat/lon locations apriori or given a city or state, find K nearest weather stations and pick a weather station. Let&rsquo;s go with the first option for now and limit ourselves to only weather stations in India.</p>
+<p>NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations). A lay user however will expect their exploration to start with a city or state. So we have two options - reverse geocode all the lat/lon locations apriori to given a city or state, find K nearest weather stations and pick a weather station. Let&rsquo;s go with the first option for now and limit ourselves to only weather stations in India.</p>
 <p>I&rsquo;m going to use ArcGIS Online&rsquo;s reverse geocoding service to obtain location information with a lat/lon pair and here&rsquo;s the python script snippet I used</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reverse_geocode</span>(lat, lon) <span style="color:#f92672">-&gt;</span> Location:
@@ -177,8 +177,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
 </span></span><span style="display:flex;"><span>    country_code <span style="color:#f92672">=</span> t.country_code
 </span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">temporary</span> t <span style="color:#66d9ef">where</span> station.lat <span style="color:#f92672">=</span> t.lat <span style="color:#66d9ef">and</span> station.lon <span style="color:#f92672">=</span> t.lon
 </span></span></code></pre></div><p><img src="/images/noaa/stations_with_city_names.png" alt="stations"></p>
-<p>Now we can present aggregates starting at the state level.</p>
-<p>Let&rsquo;s calculate daily precipitation in the state of Maharashtra in July 2024</p>
+<p>Now we can query for aggregates starting at the state level. Let&rsquo;s start by calculating daily precipitation in the state of Maharashtra in July 2024</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">distinct</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Maharashtra&#39;</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">state</span>,
@@ -190,7 +189,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> measure <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;PRCP&#39;</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> station <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;IN%&#39;</span>
 </span></span></code></pre></div><p><img src="/images/noaa/mah_daily_2024_july.png" alt="results"></p>
-<p>We&rsquo;ll now export these result to a CSV file and render it as a bar graph for which we&rsquo;ll use pandas and configuring matplotlib to work in interactive mode</p>
+<p>We&rsquo;ll export the result to a CSV file and render it as a bar graph for which we&rsquo;ll use pandas and configure matplotlib to work in interactive mode</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;plots/mah_2024_july_rains.csv&#39;</span>)
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> df<span style="color:#f92672">.</span>head()
@@ -203,7 +202,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> plt<span style="color:#f92672">.</span>ion()
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> df<span style="color:#f92672">.</span>plot(kind<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;bar&#39;</span>, x<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;measuredon&#39;</span>, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;rain_in_inches&#39;</span>, legend<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 </span></span></code></pre></div><p><img src="/images/noaa/mah_daily_2024_july_plt.png" alt="plot"></p>
-<p>Let&rsquo;s now measure rainfall accumulation to find weeks of days of heavy rains</p>
+<p>Next let&rsquo;s measure rainfall accumulation to find weeks of days of heavy rains</p>
 <ul class="pa0">
   
 </ul>

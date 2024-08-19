@@ -5,13 +5,13 @@ date = 2024-06-15T14:59:49-07:00
 
 In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we'll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 
-Question 1
+***Question 1***
 
-Given a city, show me weather trends in the last 10 years - temperature and precipitation
+Given a state, show me weather trends in the last 10 years - temperature and precipitation
 
 Detour
 
-NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations). A lay user however will expect their exploration to start with a city or state. So we have two options - reverse geocode all the lat/lon locations apriori or given a city or state, find K nearest weather stations and pick a weather station. Let's go with the first option for now and limit ourselves to only weather stations in India.
+NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations). A lay user however will expect their exploration to start with a city or state. So we have two options - reverse geocode all the lat/lon locations apriori to given a city or state, find K nearest weather stations and pick a weather station. Let's go with the first option for now and limit ourselves to only weather stations in India.
 
 I'm going to use ArcGIS Online's reverse geocoding service to obtain location information with a lat/lon pair and here's the python script snippet I used
 
@@ -60,9 +60,7 @@ set city = t.city,
 
 ![stations](/images/noaa/stations_with_city_names.png)
 
-Now we can present aggregates starting at the state level. 
-
-Let's calculate daily precipitation in the state of Maharashtra in July 2024
+Now we can query for aggregates starting at the state level. Let's start by calculating daily precipitation in the state of Maharashtra in July 2024
 ```sql
 select 
         distinct
@@ -77,7 +75,7 @@ and station like 'IN%'
 ```
 ![results](/images/noaa/mah_daily_2024_july.png)
 
-We'll now export these result to a CSV file and render it as a bar graph for which we'll use pandas and configuring matplotlib to work in interactive mode
+We'll export the result to a CSV file and render it as a bar graph for which we'll use pandas and configure matplotlib to work in interactive mode
 
 ```python
 >>> import pandas as pd
@@ -94,7 +92,7 @@ We'll now export these result to a CSV file and render it as a bar graph for whi
 ```
 ![plot](/images/noaa/mah_daily_2024_july_plt.png)
 
-Let's now measure rainfall accumulation to find weeks of days of heavy rains
+Next let's measure rainfall accumulation to find weeks of days of heavy rains
 
 
 
