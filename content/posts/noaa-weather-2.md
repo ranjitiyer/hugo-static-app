@@ -137,4 +137,61 @@ So the steps will be:
 2. Load each file into it's own table (daily_20xx)
 3. Load into final table with a select union all approach
 
+We start by downloading yearly weather data files for the last 10 years and then retain the first four cols
 
+
+```python
+>>> for i in [2014,2015,2016,2017,2018,2019,2020,2021,2022]:
+...     df = pd.read_csv(f'{i}.csv')
+...     cols = [0,1,2,3]
+...     df = df.iloc[:,cols]
+...     df.to_csv(f'{i}_formatted.csv',index=False)
+...     print(i)
+```
+
+With the formatted files in place, we can load them into individual yearly tables and union all into a final table
+
+```sql
+create table daily as
+select * from daily_2014 d inner join station s on d.station = s.id and s.state = 'Maharashtra'
+union all
+select * from daily_2015 d inner join station s on d.station = s.id and s.state = 'Maharashtra'
+union all
+select * from daily_2016 d inner join station s on d.station = s.id and s.state = 'Maharashtra'
+union all
+. . . 
+```
+
+And finally, compute the year over year rainfall in the chosen state in India and export out to a CSV file.
+
+```sql
+create table t as  
+select 
+        distinct
+        'Maharashtra' as state,
+        date_part('year', measuredon) as measuredon,
+        round((sum(val) over (partition by s.state, date_part('year', measuredon))::decimal / 10::decimal) / 25::decimal,2) as rain_in_inches
+        from daily d inner join station s on 
+        d.station = s.id and s.state = 'Maharashtra'
+where measure = 'PRCP'
+
+copy t to '/Users/ranjitiyer/work/data/weather/yoy.txt' with (FORMAT CSV, HEADER)
+```
+The results for 2014,2015 make me believe we're missing data, so I'll exclude them from the plot.
+```bash
+state,measuredon,rain_in_inches
+Maharashtra,2014,292.50
+Maharashtra,2015,288.25
+Maharashtra,2016,971.22
+Maharashtra,2017,780.39
+Maharashtra,2018,760.36
+Maharashtra,2019,1109.58
+Maharashtra,2020,906.05
+Maharashtra,2021,977.51
+Maharashtra,2022,828.97
+Maharashtra,2023,844.47
+```
+
+![plot](/images/noaa/mah_yoy_plt.png)
+
+And that brings this blog to a conclusion. Stay tuned...

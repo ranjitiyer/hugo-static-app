@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -34,7 +34,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
     
 
     
-      <link rel="canonical" href="http://localhost:1313/posts/noaa-weather-2/">
+      <link rel="canonical" href="https://example.org/posts/noaa-weather-2/">
     
 
     <meta property="og:title" content="Noaa Weather 2" />
@@ -44,7 +44,7 @@ Given a state, show me weather trends in the last 10 years - temperature and pre
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations)." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://localhost:1313/posts/noaa-weather-2/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://example.org/posts/noaa-weather-2/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2024-06-15T14:59:49-07:00" />
 <meta property="article:modified_time" content="2024-06-15T14:59:49-07:00" />
 
@@ -55,7 +55,7 @@ Given a state, show me weather trends in the last 10 years - temperature and pre
 Detour
 NOAA station data provides a lat/lon and a station code name (starting with 2 chars of country code, followed by 2 chars state code for US weather stations)."><meta itemprop="datePublished" content="2024-06-15T14:59:49-07:00" />
 <meta itemprop="dateModified" content="2024-06-15T14:59:49-07:00" />
-<meta itemprop="wordCount" content="781">
+<meta itemprop="wordCount" content="1019">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Noaa Weather 2"/>
 <meta name="twitter:description" content="In the previous post we loaded NOAA weather station metadata and did some ad-hoc analysis. In this post we&rsquo;ll answer questions that could plausibly be then served through an REST API to be rendered on a UI for reporting.
 Question 1
@@ -235,6 +235,48 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
 <li>Load each file into it&rsquo;s own table (daily_20xx)</li>
 <li>Load into final table with a select union all approach</li>
 </ol>
+<p>We start by downloading yearly weather data files for the last 10 years and then retain the first four cols</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> [<span style="color:#ae81ff">2014</span>,<span style="color:#ae81ff">2015</span>,<span style="color:#ae81ff">2016</span>,<span style="color:#ae81ff">2017</span>,<span style="color:#ae81ff">2018</span>,<span style="color:#ae81ff">2019</span>,<span style="color:#ae81ff">2020</span>,<span style="color:#ae81ff">2021</span>,<span style="color:#ae81ff">2022</span>]:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">.csv&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     cols <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>iloc[:,cols]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     df<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">_formatted.csv&#39;</span>,index<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     print(i)
+</span></span></code></pre></div><p>With the formatted files in place, we can load them into individual yearly tables and union all into a final table</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> daily <span style="color:#66d9ef">as</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> daily_2014 d <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> station s <span style="color:#66d9ef">on</span> d.station <span style="color:#f92672">=</span> s.id <span style="color:#66d9ef">and</span> s.<span style="color:#66d9ef">state</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Maharashtra&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> daily_2015 d <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> station s <span style="color:#66d9ef">on</span> d.station <span style="color:#f92672">=</span> s.id <span style="color:#66d9ef">and</span> s.<span style="color:#66d9ef">state</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Maharashtra&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> daily_2016 d <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> station s <span style="color:#66d9ef">on</span> d.station <span style="color:#f92672">=</span> s.id <span style="color:#66d9ef">and</span> s.<span style="color:#66d9ef">state</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Maharashtra&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
+</span></span><span style="display:flex;"><span>. . . 
+</span></span></code></pre></div><p>And finally, compute the year over year rainfall in the chosen state in India and export out to a CSV file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> t <span style="color:#66d9ef">as</span>  
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">distinct</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;Maharashtra&#39;</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">state</span>,
+</span></span><span style="display:flex;"><span>        date_part(<span style="color:#e6db74">&#39;year&#39;</span>, measuredon) <span style="color:#66d9ef">as</span> measuredon,
+</span></span><span style="display:flex;"><span>        round((<span style="color:#66d9ef">sum</span>(val) over (partition <span style="color:#66d9ef">by</span> s.<span style="color:#66d9ef">state</span>, date_part(<span style="color:#e6db74">&#39;year&#39;</span>, measuredon))::decimal <span style="color:#f92672">/</span> <span style="color:#ae81ff">10</span>::decimal) <span style="color:#f92672">/</span> <span style="color:#ae81ff">25</span>::decimal,<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> rain_in_inches
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">from</span> daily d <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> station s <span style="color:#66d9ef">on</span> 
+</span></span><span style="display:flex;"><span>        d.station <span style="color:#f92672">=</span> s.id <span style="color:#66d9ef">and</span> s.<span style="color:#66d9ef">state</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Maharashtra&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> measure <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;PRCP&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">copy</span> t <span style="color:#66d9ef">to</span> <span style="color:#e6db74">&#39;/Users/ranjitiyer/work/data/weather/yoy.txt&#39;</span> <span style="color:#66d9ef">with</span> (FORMAT CSV, HEADER)
+</span></span></code></pre></div><p>The results for 2014,2015 make me believe we&rsquo;re missing data, so I&rsquo;ll exclude them from the plot.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>state,measuredon,rain_in_inches
+</span></span><span style="display:flex;"><span>Maharashtra,2014,292.50
+</span></span><span style="display:flex;"><span>Maharashtra,2015,288.25
+</span></span><span style="display:flex;"><span>Maharashtra,2016,971.22
+</span></span><span style="display:flex;"><span>Maharashtra,2017,780.39
+</span></span><span style="display:flex;"><span>Maharashtra,2018,760.36
+</span></span><span style="display:flex;"><span>Maharashtra,2019,1109.58
+</span></span><span style="display:flex;"><span>Maharashtra,2020,906.05
+</span></span><span style="display:flex;"><span>Maharashtra,2021,977.51
+</span></span><span style="display:flex;"><span>Maharashtra,2022,828.97
+</span></span><span style="display:flex;"><span>Maharashtra,2023,844.47
+</span></span></code></pre></div><p><img src="/images/noaa/mah_yoy_plt.png" alt="plot"></p>
+<p>And that brings this blog to a conclusion. Stay tuned&hellip;</p>
 <ul class="pa0">
   
 </ul>
@@ -256,7 +298,7 @@ NOAA station data provides a lat/lon and a station code name (starting with 2 ch
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
     &copy;  My New Hugo Site 2024 
   </a>
     <div>
